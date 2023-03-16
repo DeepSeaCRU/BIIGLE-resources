@@ -13,7 +13,7 @@ This is the living version of the document where users can suggest edits to impr
 Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here https://biigle.de/manual. We intend this to be a living document that others can contribute to here https://github.com/DeepSeaCRU/CRU-resources. It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account.
 To create an account, click on the “sign up” button in the top right corner of the website (https://biigle.de/) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green “login” button and insert the email used to sign up, and the chosen password. 
 
-![image 1](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/1.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/1.jpg)
 
 Happy annotating!
 
@@ -193,15 +193,180 @@ FAQs/Troubleshooting:
 
 ##	Recommendations for the file structure of your bucket and file-naming conventions	
 
+It is worth giving some careful thought as to how you set up your file structure under your bucket. Different people use different systems and have different ways of storing data but there are some common features such as CAMPAIN_NAME and DEPLOYMENT_NAME. We set ours up as follows, but you need to work out what works for you. 
+
+* CLOUD_STORAGE_REPOSITORY_FOR_PLATFORM/
++ CAMPAIGN_NAME/ (for example research cruise number)
++   DEPLOYMENT_NAME/ (for example ROV dive number)
++       VIDEO_NAME/ (Video segment of ROV dive)
++           ROV_20100625T130726_8888.jpg
++           ROV_20100625T130727_7234.jpg
++           ...
+
+In practice for us that looks like this for one research cruise and considering image data:
+
+* Amazon S3 > Buckets > ‘bucket name’
++ JC136/ 
++   DIVE269/ 
++       DIVE269_SCORPIO_1/ 
++           1000__Isis-DIVE269_SCORPIO_1_20160517-181525.jpg
++           10000__Isis-DIVE269_SCORPIO_1_20160517-182125.jpg
++           100000__Isis-DIVE269_SCORPIO_1_20160517-192125.jpg
++           ……
+
+At this point it is also worth mentioning that it is good to follow a standard convention in how you name your images as it will make your life easier in the long run (python and R code you write for onward data use will run on all your files!). A possible standard is as follows, but again you must find what works for you and your data. Our ROV dive numbers are research cruise specific so we do not need to use research cruise in the image name, you might want to: 
+
+*Example naming convention for image frames extracted from video ([CruiseNumber] is inserted as an example of where you might include it)*
+
+VideoFrameNumber_[*CruiseNumber*]_PlatformName_DiveNumber_VideoSegment_YYYYMMDD_HHMMSS
+
+*Example naming convention for video files (again with cruise number inserted)*
+
+[*CruiseNumber*]_PlatformName_DiveNumber_VideoSegment 
+
+There are no agreed standards on this issue and it would be useful if there were 🙂.
+
+**IMPORTANT NOTES**: BIIGLE does not like spaces in file names, so use an underscore to separate out key parts of your file name. This also makes your file names machine readable. If you want your files to display in order when in BIIGLE you need to have numeric values at the start of the file name (e.g. frame number in the above image file example) or (in our video file example) start your video segment numbering with triple digits. i.e. 001 not single digit i.e. 1.
 
 #	Setting up projects and volumes in BIIGLE
+
+Once you have your files hosted, e.g. cloud storage set up, you can then go into BIIGLE to set up your projects and volumes. This process is relatively simple and you may already have done this when testing that your cloud storage works (see previous section). 
+
+First log into your BIIGLE account. 
+
+Go to your dashboard.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/15.jpg)
+
+Click on create project
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/16.jpg)
+
+Adding imagery to projects can be done in two ways:
+
+1. Create volume. This is done by attaching files from your remote server, e.g. from the Amazon server.
+2. Attach volumes. This is for volumes which are already in BIIGLE and you may need to attach the same volume to a different project. Start to type in the volume name, and it will display and you can click and it will add. Note, adding volumes this way attaches any annotations that have been made on the volume; if the original volume is deleted, the attached volume remains in the second project.
+
+**Creating a volume**
+
+Click on create volume
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/17.jpg)
+
+Here you can name your volume, for example it might be a cruise name, a project name or other useful name. You need to then specify whether it is an image or video volume.
+
+In ‘volume URL’ you need to paste the URL for your Amazon S3 bucket and folder that relates to your volume. You will find this by doing the following: log into your AWS account (or equivalent remote server facility), go into your bucket and then file of interest, click on an image in your file of interest, in the overview tab you will see the object URL. Copy-paste 🙂
+
+In the ‘volume files’ you will need a list of the names of all the images (or videos) that are in the file. Below is an R script that can produce this list for image data. This script produces a list in the correct format and places it on your clipboard. You can then paste this into the ‘volume files’ box.  
+
+```{r}
+
+# R Script to read a directory containing images, and place a comma separated list on the clipboard for you to paste into BIIGLE or a text file for later use
+
+setwd("F:/DSCRU-frames-main/renamed frames/DIVE295_SCORPIO_4")           
+list.files() -> imgs
+    writeClipboard(
+      paste0(
+        unlist(paste(imgs,collapse = " , ")
+                ) ,
+                collapse = " , "))
+
+```
+
+Now hit ‘create’, and this will create your volume. Your images (videos) should appear in that volume after a few seconds. 
+
 ##	Recommendations for project / volume structuring in BIIGLE
+
+It is worth considering how you set up the volumes. BIIGLE has evolved in recent years so that image and video volumes can now sit in the same project. This means that if you undertake Largo at the project level (see section 5) both image and video annotations will be displayed. Largo can also be undertaken at the volume level, but not on individual files (images or video) within a volume. When creating projects / volumes in BIIGLE, you can either:
+
+* Have each video file as an individual volume
+* Have all video files in a single volume.
+
+There are pros and cons to both.
+
+**Separate volumes**:
+
+* Allows Largo to be undertaken for individual videos
+* Can use the filter volume function to find a video
+* Have more thumbnails for videos filling up volume level
+
+**Combined volumes**:
+
+* Better storage of all videos in one folder
+* **Cannot** Largo individual videos, can only be done at the volume level - so all videos within that folder
+* The filter volume function does not work to find videos, you would either have to scroll to find the video, or use the filter functions 
+
 ##	Make label trees
+
+Before you can begin labelling you need to create a label tree. We strongly advise you to use the SMarTaR-ID trees as this provides a standard ensuring that your annotations will be comparable with others annotations, e.g. your branching sponge morphospecies 5 is the same as someone else's. However, BIIGLE is very flexible and allows you to make your own trees if you prefer. 
+
 ###	To use a publicly accessible (standard) tree
+
+To use these or other publicly accessible trees we suggest you first create a ‘fork’ of that tree (e.g. your own copy) so that you can edit it and add your own new taxa that you will come across. To do this go to the top right drop down menu on the BIIGLE dashboard and click on ‘label trees’. 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/18.jpg)
+
+This will take you to the label trees screen where you can see publicly available label trees.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/19.jpg)
+
+Search for a tree you want to use and click on it. Then in the settings drop down menu, choose ‘fork’. Give it your own name, choose to keep it private or make public, and create.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/20.jpg)
+
 ###	Creating your own tree from scratch
+
+If you need to, you can create your own tree from scratch. From the dashboard, click on ‘create label tree’. Name your tree, decide on its visibility and create. You can then add labels to your tree using the ‘Label parent’ / Label name’ boxes on the left of the screen. However, if you are adding taxonomic names, we strongly advise you to use the ‘WoRMS label import’ tab, which will attach the WoRMS Aphia ID to the label such that you can retrieve taxonomic information from WoRMS on your BIIGLE outputs (World Register of Marine Species - https://www.marinespecies.org/index.php).
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/21.jpg)
+
 ##	Attaching a label tree to your project
+
+Once your tree exists you need to authorise projects to use it. To do this simply go back to the label tree screen, click on your new label tree and then click the projects tab. You then need to type your project name into the ‘add authorised project’ box, this will allow your project to use this tree. Next you need to add the tree to your project. To attach a tree to your project, simply go into your project, click on the ‘label trees’ tab, and then start typing the name of the label tree into the search box, it will offer you possible trees you can then click on to attach to your project.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/22.jpg)
+
+Now you are all set to start annotating 🙂
+
+If you need to edit your label tree mid annotating, for example if you come across something not in your label tree, then you can do this by going back to the label tree screen, click on your new label tree and add additional labels using the ‘add label’ or ‘WoRMS label import’ tabs. 
+
 #	Make annotations
+
+Before we go any further it is useful to just familiarise yourselves with the different tools / tabs available at the project and volume level.
+
+In the project window of BIIGLE, you can:
+
+* View image and video volumes uploaded to the project,
+* View/edit label trees attached to the project,
+* Add members who can view or edit annotations, 
+* Largo the annotation. The largo function allows you to view annotations of a specific label and re-assign if incorrect, or retrospective identification,
+* Export report for the entire project (see manual for details for each report type).
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/23.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/24.jpg)
+
+In the volume window of BIIGLE, you can:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/25.jpg)
+
 ##	Image annotation
+
+To begin annotating you must select a project and volume to annotate. To view the projects, click on the three lines on the top-right corner of the webpage, and select “Projects” in the drop-down list, or just click on the projects tab. Projects will be listed on the page, and will consist of the name, preview, description, and date of last update. Double-click on the project of interest to open the volumes for each project. Alternatively, click on the “Volumes” button to open a window containing all the volumes available for access.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/26.jpg)
+
+Click on the volume of interest to open it and reveal all the images contained in it, then click on an image to start annotating. The image view in BIIGLE looks something like this:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/27.jpg)
+
+First select the appropriate tree from the “label tree” section of the panel on the right. To choose a label, you can either:
+
+* Find the label in the label tree
+* Use the search function, you can search for any part of a label, including text or numbers
+* Use shortcut keys for your favourite list (max 9)
+
+To find the label in the label tree click on the coloured dot on the side of the label to show lower taxonomic or morphological levels. Select the label of interest and the name will appear in a box on the bottom-right corner of the screen. 
+
 ##	Video annotation
 ##	Setting an annotation session
 #	Quality control and the largo tool
