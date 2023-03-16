@@ -27,7 +27,7 @@ Create an Amazon Web Services account.
 
 On the AWS management console type “S3” into the find services search box.
 
-![](/images/2.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/2.jpg)
 
 Select “S3”
 
@@ -35,7 +35,7 @@ Before you can upload data to Amazon S3, you must create a bucket in one of the 
 
 Click on “create bucket”
 
-![](/images/3.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/3.jpg)
 
 Name your bucket in a sensible way. BIIGLE recommends you use their personal random string generator [available here https://biigle.de/manual/tutorials/volumes/remote-volumes] to do this as this is hard to guess and keeps your data safer. But you can use whatever name you like.
 
@@ -46,6 +46,36 @@ Uncheck the “Block all public access” box as BIIGLE needs to see your folder
 Leave all other settings as default and click on “create bucket”
 
 Once you have created your bucket, click on it to take you to this screen
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/4.jpg)
+
+*This next section may not be necessary but is included for completeness.*
+
+Select the permissions tab
+
+Scroll down to Cross-origin resource sharing (CORS) and click on edit.
+
+The cross-origin policy is a security mechanism of web browsers that prevents malicious third parties from extracting sensitive information from your web pages. This includes cases like loading files from remote sources in BIIGLE. Although those files can be displayed, BIIGLE cannot access the raw data in the browser which is a requirement for some features of the image annotation tool. Cross-Origin Resource Sharing (CORS) is a mechanism to manually configure exceptions for the cross-origin policy. With a correct CORS configuration, BIIGLE can process files from remote sources just like regular files.
+
+To set up CORS for the files of your remote source (in this example we are using AWS), you have to update the configuration of the webserver that serves the files.
+
+Copy and paste the script below into the text box. Then save changes.
+
+[
+	{
+        "AllowedHeaders": [
+            "*"
+    	],
+        "AllowedMethods": [
+            "GET"
+    	],
+    	"AllowedOrigins": [
+            "*"
+    	],
+        "ExposeHeaders": []
+	}
+]
+
 
 ###	Enabling others to access your S3 AWS bucket when working in a team
 ##	Formatting your data for use in BIIGLE
