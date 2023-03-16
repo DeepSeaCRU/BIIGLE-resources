@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.0.36" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>An Ecologist’s Guide to BIIGLE</title>
@@ -82,16 +80,25 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/clipboard/clipboard.min.js"></script>
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/quarto.js"></script>
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/popper.min.js"></script>
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/anchor.min.js"></script>
+<link href="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="An_Ecologist's_Guide_to_BIIGLE_LIVINGVERSION_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
 
-<body>
+<body class="fullcontent">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-</div>
+
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -113,7 +120,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
 <p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
@@ -124,7 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1] 4</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+<p>The echo: false option disables the printing of code (only output is displayed).</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here https://biigle.de/manual. We intend this to be a living document that others can contribute to here https://github.com/DeepSeaCRU/CRU-resources. It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account. To create an account, click on the “sign up” button in the top right corner of the website (https://biigle.de/) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green “login” button and insert the email used to sign up, and the chosen password.</p>
@@ -132,88 +139,88 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="setting-up-on-biigle" class="level1">
 <h1>Setting up on BIIGLE</h1>
 <section id="how-to-get-set-up-with-an-amazon-web-services-remote-server" class="level2">
-<h2>How to get set up with an Amazon Web Services remote server</h2>
+<h2 class="anchored" data-anchor-id="how-to-get-set-up-with-an-amazon-web-services-remote-server">How to get set up with an Amazon Web Services remote server</h2>
 <section id="enabling-others-to-access-your-s3-aws-bucket-when-working-in-a-team" class="level3">
-<h3>Enabling others to access your S3 AWS bucket when working in a team</h3>
+<h3 class="anchored" data-anchor-id="enabling-others-to-access-your-s3-aws-bucket-when-working-in-a-team">Enabling others to access your S3 AWS bucket when working in a team</h3>
 </section>
 </section>
 <section id="formatting-your-data-for-use-in-biigle" class="level2">
-<h2>Formatting your data for use in BIIGLE</h2>
+<h2 class="anchored" data-anchor-id="formatting-your-data-for-use-in-biigle">Formatting your data for use in BIIGLE</h2>
 </section>
 <section id="converting-video-file-to-upload-to-biigle" class="level2">
-<h2>Converting video file to upload to BIIGLE</h2>
+<h2 class="anchored" data-anchor-id="converting-video-file-to-upload-to-biigle">Converting video file to upload to BIIGLE</h2>
 </section>
 <section id="recommendations-for-the-file-structure-of-your-bucket-and-file-naming-conventions" class="level2">
-<h2>Recommendations for the file structure of your bucket and file-naming conventions</h2>
+<h2 class="anchored" data-anchor-id="recommendations-for-the-file-structure-of-your-bucket-and-file-naming-conventions">Recommendations for the file structure of your bucket and file-naming conventions</h2>
 </section>
 </section>
 <section id="setting-up-projects-and-volumes-in-biigle" class="level1">
 <h1>Setting up projects and volumes in BIIGLE</h1>
 <section id="recommendations-for-project-volume-structuring-in-biigle" class="level2">
-<h2>Recommendations for project / volume structuring in BIIGLE</h2>
+<h2 class="anchored" data-anchor-id="recommendations-for-project-volume-structuring-in-biigle">Recommendations for project / volume structuring in BIIGLE</h2>
 </section>
 <section id="make-label-trees" class="level2">
-<h2>Make label trees</h2>
+<h2 class="anchored" data-anchor-id="make-label-trees">Make label trees</h2>
 <section id="to-use-a-publicly-accessible-standard-tree" class="level3">
-<h3>To use a publicly accessible (standard) tree</h3>
+<h3 class="anchored" data-anchor-id="to-use-a-publicly-accessible-standard-tree">To use a publicly accessible (standard) tree</h3>
 </section>
 <section id="creating-your-own-tree-from-scratch" class="level3">
-<h3>Creating your own tree from scratch</h3>
+<h3 class="anchored" data-anchor-id="creating-your-own-tree-from-scratch">Creating your own tree from scratch</h3>
 </section>
 </section>
 <section id="attaching-a-label-tree-to-your-project" class="level2">
-<h2>Attaching a label tree to your project</h2>
+<h2 class="anchored" data-anchor-id="attaching-a-label-tree-to-your-project">Attaching a label tree to your project</h2>
 </section>
 </section>
 <section id="make-annotations" class="level1">
 <h1>Make annotations</h1>
 <section id="image-annotation" class="level2">
-<h2>Image annotation</h2>
+<h2 class="anchored" data-anchor-id="image-annotation">Image annotation</h2>
 </section>
 <section id="video-annotation" class="level2">
-<h2>Video annotation</h2>
+<h2 class="anchored" data-anchor-id="video-annotation">Video annotation</h2>
 </section>
 <section id="setting-an-annotation-session" class="level2">
-<h2>Setting an annotation session</h2>
+<h2 class="anchored" data-anchor-id="setting-an-annotation-session">Setting an annotation session</h2>
 </section>
 </section>
 <section id="quality-control-and-the-largo-tool" class="level1">
 <h1>Quality control and the largo tool</h1>
 <section id="suggested-best-practice-in-annotation" class="level2">
-<h2>Suggested best practice in annotation</h2>
+<h2 class="anchored" data-anchor-id="suggested-best-practice-in-annotation">Suggested best practice in annotation</h2>
 </section>
 </section>
 <section id="downloading-data-and-reformatting" class="level1">
 <h1>Downloading data and reformatting</h1>
 <section id="get-and-use-a-report" class="level2">
-<h2>Get and use a report</h2>
+<h2 class="anchored" data-anchor-id="get-and-use-a-report">Get and use a report</h2>
 <section id="image-annotation-report---csv-variant" class="level3">
-<h3>Image annotation report - CSV variant</h3>
+<h3 class="anchored" data-anchor-id="image-annotation-report---csv-variant">Image annotation report - CSV variant</h3>
 </section>
 </section>
 </section>
 <section id="using-the-biigle-api" class="level1">
 <h1>Using the BIIGLE API</h1>
 <section id="intro-to-biigles-application-programming-interface" class="level2">
-<h2>Intro to BIIGLE’s Application Programming Interface</h2>
+<h2 class="anchored" data-anchor-id="intro-to-biigles-application-programming-interface">Intro to BIIGLE’s Application Programming Interface</h2>
 </section>
 <section id="basic-requests" class="level2">
-<h2>Basic requests</h2>
+<h2 class="anchored" data-anchor-id="basic-requests">Basic requests</h2>
 <section id="requesting-a-biigle-report" class="level3">
-<h3>Requesting a BIIGLE report</h3>
+<h3 class="anchored" data-anchor-id="requesting-a-biigle-report">Requesting a BIIGLE report</h3>
 </section>
 <section id="requesting-the-id-numbers-of-biigle-objects" class="level3">
-<h3>Requesting the ID numbers of BIIGLE objects</h3>
+<h3 class="anchored" data-anchor-id="requesting-the-id-numbers-of-biigle-objects">Requesting the ID numbers of BIIGLE objects</h3>
 </section>
 </section>
 <section id="using-the-api-with-r-and-python" class="level2">
-<h2>Using the API with R and Python</h2>
+<h2 class="anchored" data-anchor-id="using-the-api-with-r-and-python">Using the API with R and Python</h2>
 <section id="accessing-label-tree-information" class="level3">
-<h3>Accessing label tree information</h3>
+<h3 class="anchored" data-anchor-id="accessing-label-tree-information">Accessing label tree information</h3>
 </section>
 </section>
 <section id="uploading-annotations-to-biigle" class="level2">
-<h2>Uploading annotations to BIIGLE</h2>
+<h2 class="anchored" data-anchor-id="uploading-annotations-to-biigle">Uploading annotations to BIIGLE</h2>
 </section>
 </section>
 <section id="exporting-biigle-files-for-use-in-yolo" class="level1">
@@ -225,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </main>
 <!-- /main column -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -324,6 +331,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 </div> <!-- /content -->
 
-</body>
 
-</html>
+
+</body></html>
