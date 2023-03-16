@@ -367,9 +367,111 @@ First select the appropriate tree from the “label tree” section of the panel
 
 To find the label in the label tree click on the coloured dot on the side of the label to show lower taxonomic or morphological levels. Select the label of interest and the name will appear in a box on the bottom-right corner of the screen. 
 
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/28.jpg)
+
+Now that the label is selected, click on the “draw a square” button on the bottom, and trace a square around the object of interest by clicking on its upper- and lower-middle points and extend the box as needed. The box will be of the same colour of the chosen label. The shape of the box can be modified by unselecting the “draw a square” button, clicking on a corner of the box (which will turn red) and dragging it to reshape it. After selecting the box, it is also possible to delete the annotation by clicking on the bin icon in the bottom panel. 
+
+Tips:
+* For more specific details on annotations, refer to annotation section on BIIGLE website (https://biigle.de/manual/tutorials/annotations/creating-annotations)
+* Use shortcut keys for annotation tools, this will speed up annotation sessions, these used in combination with the favourite keys (1-9) can significantly speed up annotation
+
+![Annotation type keyboard shortcuts](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/29.jpg)
+
+When using annotations tools, things to consider: 
+
+* If you want to use your annotation for training AI models try to use the rectangle tool only and draw your rectangles in the same orientation as the image as in the example above. Try to keep your rectangle tight around your animal (e.g. do not include lots of background in your annotation). If you need to use another shape (e.g. point) that’s OK but a second conversion step will be needed outside of BIIGLE to use it for onward AI model training.  
+* size of annotation tool, e.g. if using the point, try and annotate the same part of taxa each time as this will aid viewing in Largo mode.
+* If annotating for area use the polygon tool. You can either draw this manually with the mouse/stylus (with compatible computer/IPad) or using the magic wand tool.
+
+The annotation modes section has some useful options that may also help you.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/30.jpg)
+
 ##	Video annotation
+
+To begin annotating you must select a project and volume to annotate, then select a video file (if you have organised your videos in multiple videos per volume). The video view in BIIGLE looks something like this:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/31.jpg)
+
+Annotation tools for video are mostly the same as that used for image annotation (see above), the exception is that you need to click the tick to accept the annotation before moving on to the next annotation. If this is not done, the annotation will not be complete.
+
+An additional annotation tool, whole frame annotations are also available. This allows you to in effect, segment the video. This could be to categorise by quality, habitat or even to record when an animal/object is in frame.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/32.jpg)
+
+The settings tab has some useful options that may also help you.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/33.jpg)
+
 ##	Setting an annotation session
+
+Annotation sessions can be set up for each volume allowing you to set a session where annotators cannot see each other’s annotations. These are ideal for training sessions and quality assurance to check for inter-analyst variation. 
+
+At the project level go to the Member tab and add all participants who will undertake the annotations.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/34.jpg)
+
+Then set up the annotation session. Go to volumes tab – and click on the volume thumbnail to take you to the volume view:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/35.jpg)
+
+Click on the edit button (pencil) – then edit annotation session
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/36.jpg)
+
+Fill in the annotation session box, all must be filled in (example below). Add the users names (new users box) and when you click on them they will add to the right hand box ‘users’. When you have added everyone, press create.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/37.jpg)
+
+It will display like this:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/38.jpg)
+
+If you want to edit the session, i.e. remove the annotation session, click on it. Then you can delete it or just change the date to earlier than the date and that will mean it has expired and all users will be able to see each other’s annotations. Sadly deleting the annotation session does not delete the annotations, which is a bit annoying when using for training. 
+
 #	Quality control and the largo tool
+
+The largo tool is just about the most useful tool you can imagine. It can be used to:
+
+* Check annotations for consistency
+* Separate coarsely classified groups in lower taxonomic / morphological groups 
+
+You can use the largo tool at the project or volume level. In essence it allows you to view all images with the same label at once and make changes to the labels. 
+
+At the project level simply click on the Largo tab: 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/39.jpg)
+
+At the volume level the tab is here:
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/40.jpg)
+
+In both cases you will then need to select a label from your tree. In the example here (at the project level) we have selected the ‘Echinoderms’ label, and you can see that anything that has been labelled ‘Echinoderms’ in the project is now shown on the screen. You can scroll through them using the scroll bar on the left. 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/41.jpg)
+
+If you look carefully you can see that someone has labelled a cup coral as an echinoderm (image in the bottom right corner). This is clearly wrong and so this image needs to be corrected. To do this click on the image, this will make a cross appear on it. Then click continue, which will take you to the relabelling step.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/42.jpg)
+
+Now you need to select a new label for your animal. We will relabel this as a stony coral. First select the correct label from your label tree, then click on the image to assign the new label. Then you need to decide whether to delete the old label and replace it with the new label, or just give the animal two labels. Most of the time you will want to delete the old label and replace it with the new label. To do this you need to select the ‘force delete/re-label option on the top left of the screen.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/43.jpg)
+
+You then need to hit the red save button to make the change. 
+
+You can use largo for multiple changes at once. 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/44.jpg)
+
+You can also call labels on one label tree and relabel them to a different label tree.  
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/45.jpg)
+
+Sometimes you may want to review the animal in its original image to help you to decide if / what to re-label it as. To do this simply click on the top right hand corner of the thumbnail in the original largo screen, and this will open the original annotated image in a new window.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/46.jpg)
+
 ##	Suggested best practice in annotation
 #	Downloading data and reformatting
 ##	Get and use a report
