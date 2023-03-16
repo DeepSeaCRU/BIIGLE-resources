@@ -2,6 +2,8 @@
 title: "An Ecologist's Guide to BIIGLE"
 format: docx
 editor: visual
+execute: 
+  eval: false
 ---
 
 This is the living version of the document where users can suggest edits to improve the Ecologist's Guide to BIIGLE. You can find the finalized, original version on Zenodo here: LINK
@@ -61,6 +63,8 @@ To set up CORS for the files of your remote source (in this example we are using
 
 Copy and paste the script below into the text box. Then save changes.
 
+```{r}
+
 [
 	{
         "AllowedHeaders": [
@@ -76,11 +80,120 @@ Copy and paste the script below into the text box. Then save changes.
 	}
 ]
 
+```
+
+
+*Continue from here if skipping the previous section*
+
+The following section is repeated under the ‘Setting up your BIIGLE volumes’ section. We include here as it is important you test if your AWS bucket is set up correctly before moving on. 
+
+To test that your setup is working go back to the “Objects” tab.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/5.jpg)
+
+This is where you can upload files, so create a new folder, for example called test.
+
+Click on your folder and upload a couple of images.
+
+Click “upload”, click “add files”, add your files, scroll down to the access control list and check the “everyone (public access) read check box. A new check box will appear to confirm that you understand the implications of making your files public access, just check it, then scroll down to the bottom of the page and click “upload”. Once uploaded, you can check that the files will be accessible by BIIGLE by clicking on the object URL, if it has been uploaded correctly with public settings enabled, the image or video will open. If the file does not open, check the settings.
+
+Now return to your folder and click on a newly uploaded image. In the overview tab you will see the object URL, you will need to copy this but only the bit up to and including your folder name. This is what BIIGLE will need to link up to.
+
+Now log into BIIGLE and go to your dashboard.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/6.jpg)
+
+Click on create project
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/7.jpg)
+
+Click on create volume
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/8.jpg)
+
+Here you can name your volume, for example it might be a cruise name, a project name or other useful name.
+
+In volume URL paste the URL for your Amazon S3 bucket and folder. In the volume files you will need a list of the names of all the images that are in the file. Below is an R Script to read a directory containing images, and place a comma separated list on the clipboard for you to paste into BIIGLE or a text file for later use.
+
+```{r}
+
+setwd("F:/DSCRU-frames-main/renamed frames/DIVE295_SCORPIO_4")
+list.files() -> imgs
+    writeClipboard(
+      paste0(
+        unlist(paste(imgs,collapse = " , ")
+                ) ,
+                collapse = " , "))
+    
+```
 
 ###	Enabling others to access your S3 AWS bucket when working in a team
+
+To set permissions for users of your S3 AWS you will need to use IAM. Click on services in the top left of the AWS management console and type IAM in the all services search facility.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/9.jpg)
+
+Click on groups on the left menu
+
+Create new group
+
+Name the group something sensible.
+
+Now you need to state what permissions the group gets. So on the attached policy screen type “S3” in the policy type search. Then click on AmazonS3FullAccess.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/10.jpg)
+
+Then click next, then create group.
+
+Now you need to add users to your group, so click on users on the left hand menu
+
+Click on add user
+
+Add user name and click both “access type” check boxes.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/11.jpg)
+
+Select password options, then click next permissions
+
+Check the group you want the user to belong to
+
+Click “next: tags”
+
+Click “next: review”
+
+Click “create user”
+
+Now it is very important to download the CSV file that gives you the key info for this user, you cannot get this info again if you change screen before downloading so do it now!
+
+Ok you are all set!
+
 ##	Formatting your data for use in BIIGLE
+
+BIIGLE only accepts still images as either PNG or JPEG format.
+
+Video files: need to be converted to MP4 format (codec 254). This conversion can be done using the free software VLC (https://www.videolan.org/).
+
 ## Converting video file to upload to BIIGLE
+
+*Take the following steps:*
+
+Media - convert/save - + add (find the file) – convert/save – profile (choose H.264 + MP3 (MP4) option from dropdown menu).
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/12.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/13.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/14.jpg)
+
+Choose where to save it and give it a sensible filename, see below
+
+FAQs/Troubleshooting:
+
+* VLC may corrupt when converting the video therefore check the length of the video converted matches the original.
+* VLC typically take the length of the video to convert.
+* You can set up batch conversion.
+
 ##	Recommendations for the file structure of your bucket and file-naming conventions	
+
+
 #	Setting up projects and volumes in BIIGLE
 ##	Recommendations for project / volume structuring in BIIGLE
 ##	Make label trees
