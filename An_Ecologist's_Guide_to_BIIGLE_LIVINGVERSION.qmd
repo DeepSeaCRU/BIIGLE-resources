@@ -1,37 +1,52 @@
 ---
 title: "An Ecologist's Guide to BIIGLE"
-format: pdf
+format: docx
 editor: visual
 ---
 
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The echo: false option disables the printing of code (only output is displayed).
-
+This is the living version of the document where users can suggest edits to improve the Ecologist's Guide to BIIGLE. You can find the finalized, original version on Zenodo here: LINK
 
 #	Introduction
 
 Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here https://biigle.de/manual. We intend this to be a living document that others can contribute to here https://github.com/DeepSeaCRU/CRU-resources. It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account.
 To create an account, click on the “sign up” button in the top right corner of the website (https://biigle.de/) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green “login” button and insert the email used to sign up, and the chosen password. 
 
+![image 1](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/1.jpg)
+
+Happy annotating!
+
 #	Setting up on BIIGLE
+
+Getting set up on BIIGLE (and other annotation softwares) first requires that you host your imagery data, there are three options for this: via BIIGLE (upload files on homepage); local instances and remote volumes. See the BIIGLE manual for more details. Many institutes use a cloud-based storage solution to host their remote volumes. This is not the same as a google drive or equivalent where you might store or share data. It is a formal repository that enables your images to each have a unique URL. There are many types of cloud-based storage solutions that you may wish to consider, key ones we are aware of include Amazon Web Services (AWS), and Microsoft Azure. Each uses its own terminology to refer to its storage ‘containers’. AWS calls its containers ‘Buckets’, Microsoft Azure calls them ‘Blobs’; they are the same thing. 
+
+Below we describe the process for setting up and working with AWS. We invite others to contribute similar text for other cloud-storage options.
+
 ## How to get set up with an Amazon Web Services remote server
+
+Create an Amazon Web Services account.
+
+On the AWS management console type “S3” into the find services search box.
+
+![](/images/2.jpg)
+
+Select “S3”
+
+Before you can upload data to Amazon S3, you must create a bucket in one of the AWS regions to store your data.
+
+Click on “create bucket”
+
+![](/images/3.jpg)
+
+Name your bucket in a sensible way. BIIGLE recommends you use their personal random string generator [available here https://biigle.de/manual/tutorials/volumes/remote-volumes] to do this as this is hard to guess and keeps your data safer. But you can use whatever name you like.
+
+Select your nearest region
+
+Uncheck the “Block all public access” box as BIIGLE needs to see your folder.
+
+Leave all other settings as default and click on “create bucket”
+
+Once you have created your bucket, click on it to take you to this screen
+
 ###	Enabling others to access your S3 AWS bucket when working in a team
 ##	Formatting your data for use in BIIGLE
 ## Converting video file to upload to BIIGLE
