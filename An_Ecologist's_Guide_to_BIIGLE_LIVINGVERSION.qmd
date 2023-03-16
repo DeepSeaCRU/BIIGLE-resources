@@ -1,0 +1,64 @@
+---
+title: "An Ecologist's Guide to BIIGLE"
+format: html
+editor: visual
+---
+
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+#	Introduction
+
+Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here https://biigle.de/manual. We intend this to be a living document that others can contribute to here https://github.com/DeepSeaCRU/CRU-resources. It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account.
+To create an account, click on the “sign up” button in the top right corner of the website (https://biigle.de/) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green “login” button and insert the email used to sign up, and the chosen password. 
+
+#	Setting up on BIIGLE
+## How to get set up with an Amazon Web Services remote server
+###	Enabling others to access your S3 AWS bucket when working in a team
+##	Formatting your data for use in BIIGLE
+## Converting video file to upload to BIIGLE
+##	Recommendations for the file structure of your bucket and file-naming conventions	
+#	Setting up projects and volumes in BIIGLE
+##	Recommendations for project / volume structuring in BIIGLE
+##	Make label trees
+###	To use a publicly accessible (standard) tree
+###	Creating your own tree from scratch
+##	Attaching a label tree to your project
+#	Make annotations
+##	Image annotation
+##	Video annotation
+##	Setting an annotation session
+#	Quality control and the largo tool
+##	Suggested best practice in annotation
+#	Downloading data and reformatting
+##	Get and use a report
+###	Image annotation report - CSV variant
+#	Using the BIIGLE API
+##	Intro to BIIGLE’s Application Programming Interface
+##	Basic requests
+###	Requesting a BIIGLE report
+###	Requesting the ID numbers of BIIGLE objects
+##	Using the API with R and Python
+###	Accessing label tree information
+##	Uploading annotations to BIIGLE
+#	Exporting BIIGLE files for use in YOLO
+#	Future updates to this manual
+
