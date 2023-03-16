@@ -473,15 +473,139 @@ Sometimes you may want to review the animal in its original image to help you to
 ![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/46.jpg)
 
 ##	Suggested best practice in annotation
+
+We have found through much experience that the way to get the most consistent annotations in the shortest time is to use a two-pass approach to annotation. Anyone familiar with sorting grab samples will understand where this comes from. We recommend you make a first pass through the image / video using high level taxonomy / morphology. We use the public SMarTaR-ID Basic Morphology Tree to first classify things to a high level standardised morphology. You may wish to make your own tree or just discipline yourself to only using high levels of your taxonomy tree. 
+
+Once we have annotated all our images / video to this level we use the Largo tool to then classify all images within each high level group to a lower level of taxonomy / morphology. Largo allows you to see all images classified under the same high level group at once. It is then a short and more consistent job to separate the images into lower level groups.  
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/47.jpg)
+
 #	Downloading data and reformatting
+
+As with any image analysis software, the results of the image analysis conducted on BIIGLE is stored there until it is retrieved by the user in order to analyse it further. 
+
+The data is exported via BIIGLE Reports for a single volume or the entire project. 
+
+To export a report, go find it in the aptly named ‘Reports’ tab at the root of a volume on the right handside: 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/48.jpg)
+
+The same is possible for the entire project 
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/49.jpg)
+
+This takes you to a menu where you can choose the report type, and several other options to organise the data you are downloading.
+
 ##	Get and use a report
+
+BIIGLE has many report formats displaying different types of information. The list of reports and specificities of each types are listed here:
+https://biigle.de/manual/tutorials/reports/reports-schema#annotation-abundance-report 
+
+The reports can contain the image annotation, the image labels, the metadata (be it geographical or concerning the images’ characteristics). They can be nested by user, annotation tree or other. 
+
 ###	Image annotation report - CSV variant
+
+For ecological analysis where you need to know the exact list of species present within each image in a volume or a project, the CSV format is the most practical. To get a CSV report, just select that option in the ‘Report variant’ drop down menu and leave the other boxes unticked.   
+
+R code to combine reports and format their content into a specie x Image matrix can be found along with instructions here: https://github.com/DeepSeaCRU/CRU-resources.git 
+
+The results of the SMarTaR-ID reports.Rmd are excel spreadsheets that can be used in R, python or any other software that takes tables as input. 
+
+It also gives the possibility to re-arrange the labels hierarchy (the upper taxonomic levels) to make it easily available for later analysis.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/50.jpg)
+
 #	Using the BIIGLE API
+
 ##	Intro to BIIGLE’s Application Programming Interface
+
+API stands for application programming interface, which is a set of definitions and protocols for building and integrating application software. It provides a standardised way for users to interact with databases and websites through command lines and lets them efficiently manipulate data. 
+
+The API works by sending requests to a server in the form of a command line rather than a point and click interface you normally use on a website. In practice it gives you a dialogue box in which you can input commands to interact with BIIGLE and script your action so it is faster, reproducible and can be automated. It is less intuitive because you have to write your request correctly in order to be correctly understood by the API and do what you intended. It is also faster as each command can perform a complex task that would require many clicks. This leaves less room for error than the manual interface where you may lose track of what you have and have not done, or click the wrong button without even realising it. This means that instructions can be written down and applied to the letter with no other input from you.  You can, for example, request the information attached to a specific object, modify them or add new ones. For the habitat mappers out there, this is akin to the console you open in ArcGIS to enter scripted instructions rather than use the drop-down menu and the GUI of each tool. In effect, you are pointing a command that corresponds to an action towards a specific object, the action gets performed and the expected output is sent back to you. 
+
+An important note here is that to give the instructions to BIIGLE you need to identify the objects you want to modify. BIIGLE does not use the names of volumes and images that you are using. Probably because these can be quite long, have special characters and can be duplicated across users and projects. Usually, new objects (project, volume, image, label tree, label, annotations, etc) receive a numerical ID that is unique in the whole BIIGLE ecosystem. You need to know these IDs before you can form the right API requests that BIIGLE understands. All the available commands in the BIIGLE API are listed here: https://biigle.de/doc/api/index.html
+
+Note that ‘listed’ does not mean ‘explained’. There is barely a description of what each command does, what input is expected and, succinctly, what the output will be; and no explanation of individual arguments needed in the body of each function. Some changes are regularly implemented in the commands, so it is worth taking a look there regularly in case your commands become obsolete.
+
 ##	Basic requests
+
+To make a request, the task and targets must be combined to form the command. The API requests structure works a bit like a windows explorer pathway or a website address with hierarchical elements pasted together from left to right to form a sort of sentence.  
+
+Here are simple examples: 
+
 ###	Requesting a BIIGLE report
+
+When requesting BIIGLE reports you receive an email with a link to click, that is in effect an API request to download the report created. 
+
+Specifically, if it requests the report of number 1533, the request code will be: https://biigle.de/api/v1/reports/1533
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/51.jpg)
+
+The easiest way to use that command is to paste it into your web browser’s (Chrome, Firefox, Opera, etc) address bar and it will send the request to the BIIGLE server, which will in turn do as instructed, in this case, prompt the download of report number 1533. There is more going on behind the scenes, for example, this will only work if you have been granted access to the report you are requesting (granted to you by the creator of the project). So, in your web browser, you need to be logged onto BIIGLE for the download to start, and your account needs to have been granted access to this volume. 
+
 ###	Requesting the ID numbers of BIIGLE objects
+
+Another example is for requesting some open label tree (gets a page displaying the tree in JSON format): https://biigle.de/api/v1/label-trees/55
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/52.jpg)
+
+So you can explore all the BIIGLE objects that way and get all the pretty stuff displayed in green and pink numbers so you can make sense of it, maybe. So if you pick one project that has a specific ID: 1129
+
+First you might want to know what volumes there are in there: https://biigle.de/api/v1/projects/1129/volumes
+
+If you want to display the BIIGLE ID of the images you see in a specific volume: https://biigle.de/api/v1/volumes/6063/files
+Every image added to BIIGLE gets unique Image ID. Not the ones on your remote storage server [not the ones that you have linked to a volume on BIIGLE].
+
+To get some info on a specific image: https://biigle.de/api/v1/images/1973978
+
+and what annotations it has: https://biigle.de/api/v1/images/1973978/annotations
+
+The results are displayed by the browser and give you the information you need to interact with the browser. 
+
+**What you can do with the API**:
+
+* Automatically annotate
+* Upload annotation made by Machine Learning algorithm outside of BIIGLE
+* If you have some data that was annotated in another software, you can add it to the corresponding images on BIIGLE
+* You duplicate your volume. Take all or part of the annotation from one volume and add them to another without having to re-annotate the images
+* You can also selectively transfer part of your annotations or part of your images to another volume
+* This means you can back-up your volumes at a given time and bring it back to BIIGLE at a specific stage if you want to
+* You can also easily gather data about your project. How many images, how many volume, the size of each volume, the amount of annotation by each user… etc
+* You can also gather info about label trees and modify/update it
+
+These examples are just pulling information out of BIIGLE, not actually inputting anything on the server. Other types of request exist with a “body” of data that is uploaded when the request is sent. These are better done through a terminal through R or Python.  
+
 ##	Using the API with R and Python
+
+You guessed it, if there are a lot of instructions to send, manually typing them one by one is not going to be feasible. Thanks to interfaces with your favourite coding languages, you can script your interaction with the API the same way you script other repetitive tasks. This comes down to manually “crafting” your command by gluing arguments together and then, sending them to the API directly through the console of your integrated development environment (IDE). This makes the interactions much more efficient as you program what commands are sent, which is considerably faster. This is relevant when many commands must be sent. Typically, when inputting data into individual volumes or images.
+
+To add an annotation to each image in volume, a single command must be sent for each image. A volume often hosts hundreds if not thousands of images. Hence the need to automate the process to speed it up and avoid errors. 
+
+**So how do you use BIIGLE in R or Python?**
+
+R and Python are the most commonly used programming languages in the community of BIIGLE Users. They are not the only languages that allow users to interact with an API but other options will not be covered here. 
+
+**What you need to get started**: 
+
+* A viable installation of R and Python
+* An integrated development environment (IDE) is optional but recommended
+* Libraries that let you send requests to an API in R (httr) and python (requests): httr and requests in R and Python are examples
+* Your credentials 
+
+It is good practice to have a recent if not the latest version of R installed on your computer to ensure compatibility between all code and libraries. This is less straightforward with Python where recent and old versions can co-exist on parallel update paths but try to install version 3.7.10 or later. 
+
+An IDE is strongly recommended. Rstudio and Jupyter in Anaconda are good options for R and Python respectively, but if there is an environment you are familiar with, then that is really all you need. 
+
+Base R and Python are not able to communicate with an API so you will need to import new packages or libraries to get the functions that can. In R, the code presented here uses “httr” (https://cran.r-project.org/web/packages/httr/index.html) and Python Code uses “requests” https://pypi.org/project/requests/. Make sure they are installed and up to date before starting. 
+
+You will need your credentials to tell BIIGLE who is sending these requests so it can check if you have access to the object you want to interact with. Your email address acts as your login. You will need your token that you can get here: https://biigle.de/settings/tokens. Once you have your token, store it in your IDE so it can be attached to your request each time your send one:
+
+Also, try some easy tasks first to make sure you understand the whole workflow correctly as you can easily make large scale errors when using the API.
+
+
+
+
+
 ###	Accessing label tree information
 ##	Uploading annotations to BIIGLE
 #	Exporting BIIGLE files for use in YOLO
