@@ -1,0 +1,815 @@
+---
+title: "Biigle to Yolo"
+author: "Nils"
+date: "02/12/2021"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+
+
+## Intro to YoloV5
+
+The msot important tasks concern data managment rather than actually training the model itself. 
+
+There are plenty of resources available on how to efficiently train YOLOv5 CNNs on custom dataset like: 
+https://towardsdatascience.com/the-practical-guide-for-object-detection-with-yolov5-algorithm-74c04aac4843 
+
+
+## Setting up you environment
+
+First, load your packages, set the WD and set the pathways to the different folders
+
+```{r include=FALSE}
+library(jsonlite)
+library(magick)
+library(tidyverse)
+library(magrittr)
+library(reticulate)
+
+# fetch pathway to where the script is and make it your wd
+  #wd <- dirname(rstudioapi::getSourceEditorContext()$path)
+
+#"C:/OneDrive - University of Plymouth" -> base
+#paste0( base,"/","DSCRU_AI") -> wd
+
+"~/temp" -> base
+paste0( base,"/","DSCRU_AI-main") -> wd
+paste0( base,"/","DSCRU_AI") -> wd
+
+# make a variable with the full pathway to your WD
+setwd(wd)
+getwd() -> wd
+print(wd)
+
+# folders:
+# this folder will contains the files that you will have to upload to Colab
+paste0(wd,"/colabfiles") -> for_yolo_files
+# this is the folder where your Biigle report have to go
+paste0(wd, "/reports") -> reports_folder
+# this folder will be used later once you have made predictiosn with your CNN
+paste0(wd, "/YoloResults") -> yolo_results
+
+
+# enter path to the folder where you images are
+images_dir <- "C:/OneDrive - University of Plymouth/frames/matched"
+# alternatively, if you dont have the images near you, you can download them later
+paste0(wd,"/imageDL") -> imageDLdir
+dir.create(imageDLdir)
+
+images_dir <- imageDLdir
+
+
+
+# Set the name of your colab project
+projectName <- "ProjName"
+
+
+```
+
+
+This is your environment set up. All your input data and results will be there. 
+Move your Biigle reports into the reports folder. They need to the be the CSV reports of individual volumes. There can be more than one. They also should be the zip format, No need to unzip them
+
+There are more input 
+
+## Import and filter the data from Yolo
+
+Import the Biigle report (or aggregated reports). This take every report loaded into the reports folder
+
+```{r pressure, message=FALSE}
+# list the csv tables - 
+list.files(reports_folder, pattern = "csv_image_annotation_report") -> files
+
+# 2) make a metadata table --------------------------------------------------------------------------------
+
+tibble(file = files ) %>%
+  mutate(table_name = str_remove(file,pattern = ".zip")) %>% 
+  # make a column of volume ID number
+  mutate(volume = str_remove(table_name,pattern = "_csv_image_annotation_report") ) -> annotationTables
+ 
+
+# make a list to store all transformed tables tables
+Dframes  <- as.list(1:nrow(annotationTables))
+
+for (i in seq(Dframes)) {
+  # select the table number i
+  annotationTables %>% slice(i) -> meta.i
+  # import it
+  meta.i %>% pull(file ) %>% paste(reports_folder,.,sep = "/") %>%
+    read_csv(col_types = cols()) -> D.i
+
+  # add the metadata 
+ bind_cols( D.i,meta.i) ->  Dframes[[i]]
+
+}
+
+# This is your table of everything 
+Dframes %>% bind_rows() -> DSCRU_allannotations
+
+
+
+```
+Now your Annotations are imported, select those you want to convert to Yolo Format
+
+you are probably using an OTU catalogue on Biigle So your label names may not be the most explicit
+you can create a translation table and use it here 
+
+
+This part needs to be manually checked to input the right names
+
+
+
+```{r}
+
+# show a list of labels
+DSCRU_allannotations %>% count(label_name) %>% arrange(desc(n)) %>%  print()
+
+# add other names -- 
+# make a list of labels you want to take to train your model on
+tibble(label_name = DSCRU_allannotations %>% distinct(label_name) %>%  pull) -> OBJ_NAME
+
+# make a new column of better names (rather than the Biigle catalogues names)
+OBJ_NAME %<>% mutate( Yolo_lableNames = label_name %>%  as.factor() )
+
+# Use a list of names for the different OTU you have selected --- HAVE TO BE IN THE RIGHT ORDER
+OBJ_NAME %<>%  mutate( Yolo_lableNames =  if_else(Yolo_lableNames == "OTU585",  "Acanella", Yolo_lableNames %>% as.character() ) )
+
+# alternatively - put a new names column -- !! make sure they are in the right order
+#       OBJ_NAME %<>%  mutate(Yolo_lableNames = c("Acanella","Ignore")) # deactivated by default
+
+# alternatively - manually edit the table - this will open a table window where you can type new names
+#       OBJ_NAME %<>% edit() # deactivated by default
+
+# add a class code - a numerical code that will be used by yolo instead of the text labels
+#either by letting R decide what is what level
+  # OBJ_NAME %<>%  mutate( class_code = as.numeric(Yolo_lableNames) -1 )
+# or by keeping the current label order
+  OBJ_NAME %<>%  mutate( class_code = 0:(nrow(OBJ_NAME) -1 ))
+
+print(OBJ_NAME)
+
+```
+the table above shows the available classes, given names
+
+
+```{r}
+
+# now add these new names to the annotation
+DSCRU_allannotations %>% 
+  left_join(OBJ_NAME,by = "label_name") -> d_annotations
+
+
+# if further filtering is necessary: 
+# extract the right annotations
+ d_annotations <- d_annotations %>%
+  # filter with OTU name
+  filter(label_name %in%  c("OTU585" ) )# %>% 
+  # exclude a volume (using its code)
+  # filter( volume != 2164) %>% 
+  # take the images of a specific annotator (OR remove them)
+    #filter( ! firstname == "Kerry", ! lastname == "Howell" )  
+ 
+ 
+# make a list of the corresponding OTUs just in case
+d_annotations %>%
+  distinct(Yolo_lableNames) %>%  pull(Yolo_lableNames) %>%  as.character() -> OBJ_OTU
+
+print(OBJ_OTU)
+```
+
+the printed vector is the list of objects your model will learn to detect
+
+
+## Convert annotations format
+
+
+Yolo uses a specific format which is different from the way Biigle exports the coordinates of the manual annotations
+depending on the shape of your annotations the conversion needs to be written differently
+
+the coordinates have different origins and are expressed in pixels in Biigle while yolo express them in relative height and width of the image
+
+
+```{r message=FALSE}
+ 
+d_annotations -> ForYoloimageAnnotation
+# put the attributes of the annotations into the right format
+d_annotations %>%
+  split(.$annotation_id) %>%
+  map(
+    function(X)
+      tibble(
+        image_width = X$attributes %>%  fromJSON() %>%
+          magrittr::extract("width") %>% as.numeric(),
+        image_height = X$attributes %>%  fromJSON() %>%
+          magrittr::extract("height") %>% as.numeric()
+      )
+  ) %>%
+  bind_rows(.id = "annotation_id") %>%
+  mutate(annotation_id = as.numeric(annotation_id)) %>%
+  left_join(ForYoloimageAnnotation , by = "annotation_id") %>%
+  rename(label = Yolo_lableNames) -> ForYoloimageAnnotation
+
+# First explore the label name and
+ForYoloimageAnnotation %>%  count(shape_name) %>%  print()
+# this is what we are aiming for
+yolopointnames <-
+  c("center.x" , "center.y" , "width", "height")
+
+# if the shape is rectangle -------------------------------------------------------------------------------
+    
+    ForYoloimageAnnotation %>% filter(shape_name == "Rectangle") -> d.i
+    # this is the worst shape as each corner has to be considered seprately
+    pointnames <-
+      c("xleft1",
+        "ybottom1",
+        "xleft2",
+        "ytop1",
+        "xright1",
+        "ytop2",
+        "xright2",
+        "ybottom2")
+    
+    d.i %>%
+      pull(points) %>%
+      str_remove(pattern = fixed("[")) %>%
+      str_remove(pattern = "]") %>%
+      str_split(pattern = ",")  -> l.i
+    
+    map(l.i, function(X)
+      tibble(points = pointnames , value = unlist(X) %>%  as.numeric()) %>%
+        # because manual rectangles
+        pivot_wider(names_from = points, values_from =   value) %>%
+        mutate(
+          width = abs(max(c(xleft1, xleft2, xright1, xright2)) - min(c(xleft1, xleft2, xright1, xright2))),
+          height = abs(max(c(ytop1, ytop2,ybottom1, ybottom2)) - min(c(ytop1, ytop2,ybottom1, ybottom2))),
+          center.x = mean( c( max(c(xright1, xright2)), min(c(xleft1, xleft2)) )  ),
+          center.y = mean(c( max(c(ytop1, ytop2)) , min(c(ybottom1, ybottom2))) ) ,
+        ) %>%   select(all_of(yolopointnames))) -> yolo_d.i
+    
+    # shape the rectangle data
+    yolo_d.i %>% bind_rows() %>%
+      bind_cols(select(
+        d.i,
+        label,
+        class_code,
+        annotation_id,
+        filename,
+        image_width,
+        image_height
+      )) -> yolo_rectangle
+    
+# in case of circle --------------------------------------------------------------------------------
+
+# taking the full radius of a circle takes up a lot of background with it
+# for the xenos in the AUV, that is fine but hte the ROV xenos circle are tighter. 
+# so the height should be the whole diameter of the circle (2 radius) 
+# !!!!!!!!!!!!!!!!!!!!!!!!  --- THAT NEEDS TO BE ADJUSTED IF YOU USE CIRCLES
+
+radius_factor <- 2 # 2 means you take the whole diamter of the circle as width
+
+# for a whole table
+ForYoloimageAnnotation %>% filter(shape_name == "Circle")    ->  d.i
+pointnames <- c("center.x", "center.y", "radius")
+
+# list all the points coordinates
+d.i %>%
+  pull(points) %>%
+  str_remove(pattern = fixed("[")) %>%
+  str_remove(pattern = "]") %>%
+  str_split(pattern = ",") -> l.i
+
+map(l.i, function(X)
+  tibble(points = pointnames , value = unlist(X) %>%  as.numeric()) %>%
+    pivot_wider(names_from = points, values_from =   value) %>%
+    mutate(
+      width = radius_factor * radius,
+      height = radius_factor * radius ,
+      center.x = center.x,
+      center.y =  center.y
+    )  %>%
+    select(all_of(yolopointnames)))   -> yolo_d.i
+
+
+# put back into a table format and add the imagename
+yolo_d.i %>% bind_rows() %>%
+  bind_cols(select(
+    d.i,
+    label,
+    class_code,
+    annotation_id,
+    filename,
+    image_width,
+    image_height
+  )) -> yolo_circles
+
+# in case of a point annotation -------------------------------------------------------------------------
+    #   Avoid points if you can afford it
+# what size is the square around the point going to be (in pixels)
+pointsRadius <- 20
+
+
+ForYoloimageAnnotation %>%  filter(shape_name == "Point")  ->  d.i
+pointnames <- c("center.x", "center.y")
+
+d.i %>%
+  pull(points) %>%
+  str_remove(pattern = fixed("[")) %>%
+  str_remove(pattern = "]") %>%
+  str_split(pattern = ",") -> l.i
+
+map(l.i, function(X)
+  tibble(points = pointnames , value = unlist(X) %>%  as.numeric()) %>%
+    pivot_wider(names_from = points, values_from =   value) %>%
+    mutate(
+      width = radius_factor * pointsRadius,
+      height = radius_factor * pointsRadius ,
+      center.x = center.x,
+      center.y =  center.y
+    ) %>%
+    select(all_of(yolopointnames)))  %>%
+  bind_rows() %>%
+  bind_cols(select(
+    d.i,
+    label,
+    class_code,
+    annotation_id,
+    filename,
+    image_width,
+    image_height
+  )) -> yolo_points
+
+# in case of a polygon ------------------------------------------------------------------------------------------
+ForYoloimageAnnotation %>%  filter(shape_name == "Polygon")  ->  d.i
+
+d.i %>%
+  pull(points) %>%
+  str_remove(pattern = fixed("[")) %>%
+  str_remove(pattern = "]") %>%
+  str_split(pattern = ",") -> l.i
+
+#l.i[[1]] -> X
+map(l.i, function(X)
+  tibble(
+    points = rep(c("x", "y"), length(X) / 2),
+    index = seq(1:(length(X) / 2)) %>% rep(each = 2) ,
+    value = unlist(X) %>%  as.numeric()
+  ) %>%
+    mutate(value = ifelse(value < 0, 0, value)) %>%
+    # get the maximums of Xs
+    group_by(points) %>%  summarise(min = min(value), max = max(value)) %>%
+    # calcualte centers
+    rowwise() %>% mutate(cut = max - min, center = mean(c(min, max))) %>%
+    
+    pivot_longer(cols = c(min, max, center, cut)) %>%
+    mutate(
+      pointnames = c(
+        "xleft",
+        "xright",
+        "center.x",
+        "width",
+        "ytop",
+        "ybottom",
+        "center.y",
+        "height"
+      )
+    ) %>%
+    select(pointnames, value) %>%
+    pivot_wider(names_from = pointnames, values_from =   value) %>%
+    select(all_of(yolopointnames))) %>%
+  bind_rows() %>%
+  bind_cols(select(
+    d.i,
+    label,
+    class_code,
+    annotation_id,
+    filename,
+    image_width,
+    image_height
+  )) -> yolo_polygons
+# get the minimum
+ 
+
+# if it is an Ellipse ---------------------------------------------------------------------------------
+
+# Please do not use Ellipses
+
+#  Apply rescaling ======================================================================================
+
+# now you have a table of annotations in Yolo format
+rm(yolo_d.i)
+bind_rows(yolo_rectangle, yolo_points, yolo_circles, yolo_polygons) %>%  arrange(annotation_id) -> yolo_d.i
+
+# now normalize for each image - transform coordinates in pixels into relative heights and width
+
+yolo_d.i %>%  mutate(
+  center.x = center.x / image_width,
+  center.y = center.y / image_height,
+  width = width / image_width,
+  height = height / image_height
+) -> yolo_annotations
+
+```
+
+## Add the pathway to the images 
+
+ 
+If you decided to download the images from Biigle, you will have to provide the URL link to the server where the images are stored
+
+you will find the server URL in the settings of the biigle volume
+if you are using multiple volumes, repeat this step for each one. If you have too many, you should be doing this outside of this script anyway
+
+cell is deactivated by default 
+
+```{r eval=FALSE, message=FALSE}
+
+# enter server URL
+serverURL <- "https://URL/to/ProjName"
+serverURL <- "https://0092e606-4a9c-40a0-a570-0926fceb18fd.s3.eu-west-2.amazonaws.com/SEAROVER/Acanella"
+paste0(wd,"/imageDL") -> imageDLdir
+dir.create(imageDLdir)
+
+# 
+DSCRU_allannotations %>% distinct(filename) %>% pull -> imgs_list
+
+for (imageName in imgs_list) {
+  print(imageName)
+  # dont download the image if it is already there
+  if(!file.exists(paste0(imageDLdir,"/",imageName))){
+    print(" -- Downloading -- ")
+  paste0(serverURL, "/",imageName ) %>% download.file(destfile = paste0(imageDLdir,"/",imageName), mode = 'wb')
+  }else{print("already downloaded")}# checking image doesnt exist before downloading 
+  
+}# download images to your yolo directory
+
+# delete the image list vector
+rm(imgs_list)
+
+# set the DL folder to the location of your images
+images_dir <- imageDLdir
+
+
+
+```
+
+if you have all your images on drive (its better) put the path to the root of that drive here 
+
+DO not run this cell if you have downloaded the images from Biigle, it will rest the path 
+
+```{r}
+
+# enter path to the folder where you images are
+ images_dir <- imageDLdir# if you downloaded from the server
+#images_dir <- "C:/OneDrive - University of Plymouth/frames/matched"
+
+```
+
+
+Before images can be moved to a specific folder along with the annotations, biigle needs to know where they are
+so a table of the image pathways is needed. Ideally, you already have it but in case you need to make it: 
+
+```{r}
+
+# make a table of images and path to each of them
+images_dir %>%  list.files(recursive = T, full.names = T) -> imgs_paths
+images_dir %>%  list.files(recursive = T,
+                           full.names = F,
+                           include.dirs = F) -> imgs_list
+imgs_list %>%  str_split(pattern = "/") %>%
+  map(~ extract2(.x, length(.x))) %>%
+  unlist() -> imgs_names
+
+# format the table
+tibble(image = imgs_list,
+       path = imgs_paths,
+       filename = imgs_names) -> img_PATHWAYS
+ 
+
+```
+ 
+
+ 
+This a specific bit of code for images that need to be manaully renamed to make sure images and annotation match. This may occur when images names ahev been modified in hte archives after having been uploaded to AWS and annotated on Biigle
+
+```{r}
+
+# You should not have to change/run this chunk
+yolo_annotations %<>%
+  mutate(filename = str_replace(filename, pattern = "20191408", replacement = "20190814" )) %>% 
+  mutate(filename = str_replace(filename, pattern = "20172007", replacement = "20170720" ))  
+  
+
+```
+
+now add it to your image annotations
+
+```{r}
+
+
+# add the pathways---------------------------------------------------------------------------------------------------
+    # merge it with the the images metadata including the path and dimensions
+  img_PATHWAYS %>%  left_join(yolo_annotations, . , by = "filename" ) -> yolo_annotations_path
+
+# make sure all images are matched to their pathways
+yolo_annotations_path %>% filter(is.na(path)) -> mismatched # 
+paste0(nrow(mismatched), " images have not been matched")
+# if you want to know what the mismatches are, call the mismatched table in the console
+
+
+```
+
+if it says 0, then you are clear to proceed. 
+If not, try to see why some images were not found in the directory. Often there might be a discrepancy inthe names, the date can be written wrong or the the format is different (jpg on Biigle but png on you machine)
+
+## For safety, you may want to to look at what your resized annotations look like: 
+
+!! check the amount you are resampling. If you have a small number of images, taking a smaller subset may not be necessary
+
+```{r}
+ library(imager)
+
+# randomly take a couple of images to see how the annotations plot over these
+yolo_annotations_path %>% distinct(filename) %>%  pull(filename) %>%  sample(20) -> imgforplot
+yolo_annotations_path %>% filter(filename %in% imgforplot) -> yolo_annotationsForplot
+  
+yolo_annotationsForplot %>%   distinct(filename) %>%  pull() -> imgs
+
+ 
+# make a folder of images where your images with annotations will be
+   target_dir <- paste0(wd,"/testAnnotations")
+
+  target_dir %>% dir.create()
+
+for (I in seq(imgs)) {
+  imgs[I] -> img.I
+  print(img.I)
+  
+   
+  # open the annotations 
+  yolo_annotationsForplot %>% filter(filename == img.I) -> annotations.I
+  
+  # open the images
+  annotations.I %>%  distinct(path) %>%  pull() %>% extract(1) %>% 
+  load.image( ) -> image2
+  
+  
+  for (i in 1:nrow(annotations.I)) {
+    # take the annotation
+    
+    annotations.I %>%  slice(i) -> r.i
+    
+    # descale teh coordinates to pixels
+    xleft <- (r.i$center.x * width(image2) ) - (r.i$width* width(image2)/2) 
+    ybottom <- (r.i$center.y*height(image2) ) - (r.i$height*height(image2)/2)  
+    xright <- (r.i$center.x* width(image2) ) + (r.i$width* width(image2)/2)  
+    ytop <- (r.i$center.y*height(image2) ) + (r.i$height*height(image2)/2)  
+    
+    c(xleft  ,ybottom  ,xright   ,ytop      ) -> v
+    
+    # plot it over the image
+    imager::draw_rect(  image2 ,v[1],v[2],v[3],v[4], opacity = 0.1 ,filled =  TRUE, color = rainbow(10)[i] ) -> image2
+    
+     
+     
+  }
+  
+  # export the image
+  
+  imager::save.image(image2, paste0(target_dir,"/",img.I %>%  str_replace(pattern = "png",replacement = "jpg") )  )
+  
+}
+
+```
+
+## Make training and testing set
+
+Now you will separate the annotations between a training and testing folder 
+
+note that with Darknet, you need a training set that is used throught training to calculate mAP at regualr intervals. This may be reffered to as 
+
+This step will vary depending on how you choose to resample you data. You may not want to take all your images
+
+
+```{r  message=FALSE}
+# shuffle the images in the table to randomize the order in which they are taken
+yolo_annotations_path %>% distinct(filename) %>% pull() -> v
+
+sample(v, length(v)) %>%
+  tibble(filename = ., shuffleid = 1:length(.)) %>%
+  left_join(yolo_annotations_path) -> d1
+
+# if necessary, take less images
+d1 %>%  slice(1:100) %>% distinct(filename) %>%  pull(filename) %>% sample(length(.) * 0.75) -> v1small  # This is deactivated 
+# or take a fraction of the images --  
+d1  %>% distinct(filename) %>%  pull(filename) %>% sample(length(.) * 0.75)  -> v1
+# once you have your set of images, take the corresponding annotations -- change v1 to v1small if you want less images 
+d1 %>% filter(filename %in% v1) -> d_training
+# Keep a set that will be used to test the CNN performances and calculate recall and precision
+d1 %>% filter(!filename %in% v1) -> d_testing_Val # this will take annotations that were not used for training as validation set
+
+# print down how many annotations you have in training
+print(paste0(nrow(d_training), " annotations in training (", d_training %>% distinct(filename) %>% nrow()," images)"))
+# and print down how many files you should have in your folder
+print(paste0(d_training %>%  count(filename)  %>% nrow() * 2, " single files in training folder"))
+d_training %>%  write_csv(paste0(for_yolo_files, "/train_set.csv"))
+
+# print down how many annotations you have in testing
+print(paste0(nrow(d_testing_Val), " annotations for testing (", d_testing_Val %>% distinct(filename) %>% nrow()," images)"))
+# and print down how many files you should have in your folder
+print(paste0(d_testing_Val %>%  count(filename)  %>% nrow() * 2, " single files in testing folder"))
+d_testing_Val %>%  write_csv(paste0(for_yolo_files, "/test_set.csv"))
+
+```
+
+## Make the files for Yolo local and on Colab
+
+the annotations have to be written into a txt file for each image. images and annotations have to be together in a folder
+
+If you so desire you can rescale your images to save space on cloud storage. This is not recommended as it may impact the performances
+
+```{r  message=FALSE}
+# would you like to resize your image?
+# there is a built-in if statement that allows you to make images smaller in size so they take less space on gdrive (and quicker to upload)
+# dont resize for training. and dont resize unless absolutely necessary. let yolo handle it for you
+resize_enabled <- "no"
+rescale_factor <- 0.8 
+
+
+# make yolo zip files for training and testing sets
+for (training_OR_testing in c("train", "test")) {
+  
+  if(training_OR_testing == "train"){
+    # teh trainin gset
+    read_csv( paste0(for_yolo_files,"/train_set.csv") ) ->  annotations
+    labelsfolder  <-  paste0(for_yolo_files,"/",projectName, "/labels/train" )
+    imagefolder <- paste0(for_yolo_files,"/",projectName, "/images/train")
+    print("Making the training set")
+  }else if(training_OR_testing == "test"){
+    read_csv(  paste0(for_yolo_files,"/test_set.csv") ) -> annotations
+    labelsfolder  <-  paste0(for_yolo_files,"/",projectName, "/labels/val" )
+    imagefolder <- paste0(for_yolo_files,"/",projectName, "/images/val")
+    print("Making the testing set")
+  }
+  
+  # create a fodler
+  
+  dir.create(labelsfolder,recursive = T)
+  dir.create(imagefolder, recursive = T)
+  
+  
+  # for each image in the annotations table 
+  annotations %>% count(filename) %>%  pull(filename) ->  imgs
+  for(i in seq(imgs)){
+    
+    
+    imgs[i] -> imgs.i
+    # get the image name no matter the extention
+    imgs.i %>%  str_split(pattern = fixed(".") ) %>% unlist()  %>%   magrittr::extract(1)  -> imagename.i
+    
+    # set path the image 
+    # or from the existing repository
+    imagepath.i <- annotations %>%  filter(filename == imgs.i) %>%  distinct( path    ) %>% pull()
+    
+    # some time stamps can be matched multiple times if they are records for several species
+    # pick the first one 
+    if(length(imagepath.i) > 1 ){ imagepath.i[1] -> imagepath.i}
+    # always take the image from the every20s folder
+    # if(length(imagepath.i) > 1 ){ imagepath.i %<>% str_subset(pattern = "every20s" ) }
+    
+    annotations %>%  filter(filename == imgs.i) %>%
+       distinct(center.x, center.y,  width, height, .keep_all = T) %>% 
+      select(all_of(c("class_code", yolopointnames))) -> labels_txt
+    # round the coordinates to only 2 digits
+    labels_txt %<>%
+      mutate(across(c(center.x, center.y, width, height), round, digits = 2  ) )
+    
+    # Export the txt file
+    write.table(labels_txt, quote = FALSE, row.names = FALSE, 
+                col.names = F, file = paste0(labelsfolder,"/",imagename.i,".txt") )  
+    #  export the image IN JPG
+    if(resize_enabled == "yes" & training_OR_testing == "test"){
+      
+      annotations %>%  filter(filename == imgs.i) %>% pull(path)  %>%  image_read() -> auv_image
+      
+      # without a rescale factor object:
+      # image_resize(auv_image, "800x800!") -> auv_image
+      # with the rescale factor set manually
+      image_info(auv_image) %>% pull(height) -> v
+      v*rescale_factor -> rescale_coef
+      image_scale(auv_image, paste0("X",rescale_coef)) -> auv_image
+      
+      image_write(  auv_image ,  paste0(imagefolder,"/",imagename.i,".jpg" ) )
+      
+      
+    }else{ file.copy(from = imagepath.i,
+                     to = paste0(imagefolder,"/",imagename.i,".jpg"), overwrite = T)}
+    
+    rm(labels_txt, imagepath.i, imagename.i)
+    
+  } # next image
+  
+  
+}# next set
+
+
+
+
+```
+
+
+one more file is necessary: 
+a .yaml file that has the info on the structure of your dataset. 
+the path arguments tells yolov5 where to look for images and annotations. The exact path will depend on where your stored your things and how you want to run it. 
+by default I have set it in the parent directory (../) of the YoloV5 on your local machine. But you may have to edit it
+if you want to put it in the 'data' dir in the yolov5 repo folder, just put: './data/projectName'
+pathways to images and labels depend on that root path
+
+number of classes and class names should be gathered from your tables 
+This is simple: just a list of names of your category. If you have only one, it should just be: 
+Acanella
+
+if you have more than one, this file should be:  
+
+class1
+class2
+class3
+class4
+
+
+You can do this step manually if you prefer. It is a bit simple that way, particularly if you have many classes
+
+
+
+```{r}
+# make the yaml file
+
+data.frame(
+  X = c(
+    paste0("path: ./datasets/", projectName, " # dataset root dir"),
+    "train: images/train # train images (relative to 'path')" ,
+    "val: images/val # val images (relative to 'path')" ,
+    "test:  # test images (optional)",
+    "#Classes",
+    paste0("nc: ",length(OBJ_OTU),"  # number of classes"),
+    paste0("names: ", paste0(OBJ_OTU,collapse = "','") %>% paste0("['" ,. , "'] # classes names") )
+  )
+) %>%
+  format_csv(col_names = F) %>%
+  # remove the last line jump so the file does not end with an empty line
+  str_sub(start = 0, end = -2) %>% 
+  # remove some " that shouldnt be there
+  str_replace(pattern = '"names',replacement = "names") %>% 
+  str_replace(pattern = 'names"',replacement = "names") %>%
+  cat(sep = "",
+      file = paste0(for_yolo_files,"/",projectName, "/", "dataset.yaml"))
+
+
+```
+
+!!!! cat() introduce an empty line at the end of the table so you most open your obj.names object with a .txt editor and remove it so the last row is the last label
+
+I am still looking for a way to avoid it. IF you know, please let me know
+
+So Now you have you Data ready. You can stop here if you want to train locally
+
+
+# Zip for faster upload to colab
+
+zip the folders you just made (makes life easier)
+
+This is not a necessity but makes life easier especialy for larger datasets that you are going to work with on a regular basis
+
+use python to zip the files (the R zipping is buggy when used in markdown... annoyingly)
+
+**Reminder: this will no work if you have not configured python to work in Rstudio**
+
+
+```{python}
+import os
+import shutil
+
+# calling r objects into the python session can be done with r.[objectname]
+wdp =  r.getwd() # this only works of your RMD is in your WD
+wdp =  r.wd # this is a safer option but make sure you first cell ran properly
+wdp = wdp.replace('/','\\')
+# for the training set
+path = os.path.join(wdp,"colabfiles" )
+dir_name =  os.path.join(path,r.projectName )
+# make a zip
+shutil.make_archive(os.path.join(path,r.projectName ) , 'zip',dir_name)
+
+```
+
+now you can use YOLO
+
+
+```{r}
+annotations %>%  
+  ggplot(aes(label)) + geom_bar() +theme_bw()
+```
+
+
+
+
+
