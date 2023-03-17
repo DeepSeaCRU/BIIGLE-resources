@@ -1,6 +1,11 @@
 ---
 title: "An Ecologist's Guide to BIIGLE"
+author: "Please cite this document as: Howell KL, Bridges A, Davies J, Parimbelli A, Piechaud N (2023) An Ecologist’s Guide to BIIGLE. University of Plymouth. 46pp. DOI: 10.5281/zenodo.7728927"
 format: docx
+reference-doc: style-reference-doc.docx
+toc: true
+toc-depth: 3
+number-sections: true
 editor: visual
 execute: 
   eval: false

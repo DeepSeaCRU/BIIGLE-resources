@@ -1,0 +1,18 @@
+---
+title: "style-reference-doc"
+format: docx
+toc: true
+toc-depth: 3
+number-sections: true
+editor: visual
+execute: 
+  eval: false
+---
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+Standard document font choice. 
