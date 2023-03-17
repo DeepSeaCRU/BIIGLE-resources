@@ -5,7 +5,7 @@ author: "Please cite this document as: Howell KL, Bridges AEH, Davies J, Parimbe
 
 date: "17th March 2023"
 
-abstract: "IMPORTANT INFORMATION: We intend for this to be a living document that others can contribute to. The manual is hosted on GitHub in our [BIIGLE-resources](https://github.com/DeepSeaCRU/BIIGLE-resources) repository. If you see something that you feel could be made clearer or needs changing, please let us know by flagging an issue on GitHub. This can be done by going to our [BIIGLE-resources](https://github.com/DeepSeaCRU/BIIGLE-resources) repository, clicking 'Issues' (top left), and then logging a 'New issue' (green button on the right). This will allow us to update and improve this resource as we intend to do so annually. A PDF version of this manual is available for download on Zenodo, [here](https://zenodo.com)."
+abstract: "IMPORTANT INFORMATION: We intend for this to be a living document that others can contribute to. The manual is hosted on GitHub in our [BIIGLE-resources](https://github.com/DeepSeaCRU/BIIGLE-resources) repository. If you see something that you feel could be made clearer or needs changing, please let us know by flagging an issue on GitHub. This can be done by going to our [BIIGLE-resources](https://github.com/DeepSeaCRU/BIIGLE-resources) repository, clicking 'Issues' (top left), and then logging a 'New issue' (green button on the right). This will allow us to update and improve this resource as we intend to do so annually. A PDF version of this manual is available for download on Zenodo, [here](https://zenodo.org/record/7728927#.ZBSUynbP1PZ)."
 format: docx
 reference-doc: style-reference-doc.docx
 toc: true
