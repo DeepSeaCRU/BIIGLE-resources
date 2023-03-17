@@ -1,4 +1,4 @@
-# CRU-resources
+# Species-matrices
 
 # 1) Biigle reports to contingency matrices
 R script to enable usage of the aphiaID and higher taxonomic levels of the SMarTar-ID (https://smartar-id.app) labels in ecological analysis
