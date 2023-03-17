@@ -15,4 +15,4 @@ execute:
 
 ### Heading 3
 
-Standard document font choice. 
+Standard document font choice.
