@@ -923,6 +923,8 @@ OBJ_NAME %>% arrange(class_code) %>%  select( Yolo_labelNames) %>% write_delim(c
 
 ```
 
+**You can manually update the csv files in Excel, they will be re-open in the next code chunk**
+
 ## Make the files for Yolo local and on Colab
 
 # Note that this reads the csv tables exported earlier. You can modify those
