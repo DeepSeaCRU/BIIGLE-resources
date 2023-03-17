@@ -19,7 +19,7 @@ It should
 - install the packages you need
 - create some folders in that WD
 
-Once it is has finished, the folder you downloaded should contain: 
+### Once it is has finished, the folder you downloaded should contain: 
 
  - reports: where you put your Biigle files
  - colabfiles: this where the reshaped annotations in report folder will be. It should be empty when you start and contain several files when you are ready to move onto colab: 
