@@ -16,6 +16,8 @@ execute:
   eval: false
 ---
 
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/CoverImage.jpg)
+
 # Introduction
 
 Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here <https://biigle.de/manual>. 
@@ -502,7 +504,7 @@ The reports can contain the image annotation, the image labels, the metadata (be
 
 For ecological analysis where you need to know the exact list of species present within each image in a volume or a project, the CSV format is the most practical. To get a CSV report, just select that option in the 'Report variant' drop down menu and leave the other boxes unticked.
 
-R code to combine reports and format their content into a species x image matrix can be found along with instructions here: <https://github.com/DeepSeaCRU/BIIGLE-resources.git> (in the SpeciesMatrices folder)
+R code to combine reports and format their content into a species x image matrix can be found along with instructions here: <https://github.com/DeepSeaCRU/BIIGLE-resources.git> (in the species-matrices folder)
 
 The results of the SMarTaR-ID reports.Rmd are excel spreadsheets that can be used in R, python or any other software that takes tables as input.
 
