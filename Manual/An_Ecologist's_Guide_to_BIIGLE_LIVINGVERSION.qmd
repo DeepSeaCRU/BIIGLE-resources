@@ -1,6 +1,6 @@
 ---
 title: "An Ecologist's Guide to BIIGLE"
-author: "Please cite this document as: Howell KL, Bridges A, Davies J, Parimbelli A, Piechaud N (2023) An Ecologist’s Guide to BIIGLE. University of Plymouth. 46pp. DOI: 10.5281/zenodo.7728927"
+author: "Please cite this document as: Howell KL, Bridges AEH, Davies J, Parimbelli A, Piechaud N (2023) An Ecologist’s Guide to BIIGLE. University of Plymouth. 46pp. DOI: 10.5281/zenodo.7728927"
 format: docx
 reference-doc: style-reference-doc.docx
 toc: true
@@ -11,20 +11,23 @@ execute:
   eval: false
 ---
 
-This is the living version of the document where users can suggest edits to improve the Ecologist's Guide to BIIGLE. You can find the finalized, original version on Zenodo here: LINK
+This is the living version of the document where users can suggest edits to improve the Ecologist's Guide to BIIGLE. You can find the finalized, original v1 on Zenodo here: LINK
 
-#	Introduction
+We intend for this to be a living document that others can contribute to. The manual is hosted on GitHub in our BIIGLE-resources repository here: <https://github.com/DeepSeaCRU/BIIGLE-resources>. If you see something that you feel could be made clearer or needs changing, please let us know by flagging an issue on GitHub. This can be done by going to our [BIIGLE-resources](https://github.com/DeepSeaCRU/BIIGLE-resources) repository, clicking 'Issues' (top left), and then logging a 'New issue' (green button on the right). This will allow us to update and improve this resource as we intend to do so annually. 
 
-Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here https://biigle.de/manual. We intend this to be a living document that others can contribute to here https://github.com/DeepSeaCRU/CRU-resources. It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account.
-To create an account, click on the “sign up” button in the top right corner of the website (https://biigle.de/) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green “login” button and insert the email used to sign up, and the chosen password. 
+# Introduction
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/1.jpg)
+Hello and welcome to our BIIGLE manual. This document is intended to help ecologists get started using BIIGLE to annotate their image and video data. The manual was originally written to support new members of the Deep-Sea Conservation Research Unit as well as undergraduate students at the University of Plymouth. It is a collection of information that we have found helpful to document in our experience of setting up and using BIIGLE. It is not intended as a replacement for the official BIIGLE manual available here <https://biigle.de/manual>. 
+
+It is fair to say our current instruction manual is bias toward image data (although video is included), and only provides instructions for setting up using Amazon Web Service as the host for your imagery. If you can provide instruction for setting up on other cloud services, please contribute. But first things first, you need to create a BIIGLE account. To create an account, click on the "sign up" button in the top right corner of the website (<https://biigle.de/>) homepage. Fill in the module with your details and affiliation, choose a password and, after agreeing to the privacy notice and the terms of use, click on sign up. To log in, click on the green "login" button and insert the email used to sign up, and the chosen password.
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/1.jpg)
 
 Happy annotating!
 
-#	Setting up on BIIGLE
+# Setting up on BIIGLE
 
-Getting set up on BIIGLE (and other annotation softwares) first requires that you host your imagery data, there are three options for this: via BIIGLE (upload files on homepage); local instances and remote volumes. See the BIIGLE manual for more details. Many institutes use a cloud-based storage solution to host their remote volumes. This is not the same as a google drive or equivalent where you might store or share data. It is a formal repository that enables your images to each have a unique URL. There are many types of cloud-based storage solutions that you may wish to consider, key ones we are aware of include Amazon Web Services (AWS), and Microsoft Azure. Each uses its own terminology to refer to its storage ‘containers’. AWS calls its containers ‘Buckets’, Microsoft Azure calls them ‘Blobs’; they are the same thing. 
+Getting set up on BIIGLE (and other annotation softwares) first requires that you host your imagery data, there are three options for this: via BIIGLE (upload files on homepage); local instances and remote volumes. See the BIIGLE manual for more details. Many institutes use a cloud-based storage solution to host their remote volumes. This is not the same as a google drive or equivalent where you might store or share data. It is a formal repository that enables your images to each have a unique URL. There are many types of cloud-based storage solutions that you may wish to consider, key ones we are aware of include Amazon Web Services (AWS), and Microsoft Azure. Each uses its own terminology to refer to its storage 'containers'. AWS calls its containers 'Buckets', Microsoft Azure calls them 'Blobs'; they are the same thing.
 
 Below we describe the process for setting up and working with AWS. We invite others to contribute similar text for other cloud-storage options.
 
@@ -32,29 +35,29 @@ Below we describe the process for setting up and working with AWS. We invite oth
 
 Create an Amazon Web Services account.
 
-On the AWS management console type “S3” into the find services search box.
+On the AWS management console type "S3" into the find services search box.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/2.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/2.jpg)
 
-Select “S3”
+Select "S3"
 
 Before you can upload data to Amazon S3, you must create a bucket in one of the AWS regions to store your data.
 
-Click on “create bucket”
+Click on "create bucket"
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/3.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/3.jpg)
 
-Name your bucket in a sensible way. BIIGLE recommends you use their personal random string generator [available here https://biigle.de/manual/tutorials/volumes/remote-volumes] to do this as this is hard to guess and keeps your data safer. But you can use whatever name you like.
+Name your bucket in a sensible way. BIIGLE recommends you use their personal random string generator (available here <https://biigle.de/manual/tutorials/volumes/remote-volumes>) to  do this as this is hard to guess and keeps your data safer. But you can use whatever name you like.
 
 Select your nearest region
 
-Uncheck the “Block all public access” box as BIIGLE needs to see your folder.
+Uncheck the "Block all public access" box as BIIGLE needs to see your folder.
 
-Leave all other settings as default and click on “create bucket”
+Leave all other settings as default and click on "create bucket"
 
 Once you have created your bucket, click on it to take you to this screen
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/4.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/4.jpg)
 
 *This next section may not be necessary but is included for completeness.*
 
@@ -87,34 +90,33 @@ Copy and paste the script below into the text box. Then save changes.
 
 ```
 
-
 *Continue from here if skipping the previous section*
 
-The following section is repeated under the ‘Setting up your BIIGLE volumes’ section. We include here as it is important you test if your AWS bucket is set up correctly before moving on. 
+The following section is repeated under the 'Setting up your BIIGLE volumes' section. We include here as it is important you test if your AWS bucket is set up correctly before moving on.
 
-To test that your setup is working go back to the “Objects” tab.
+To test that your setup is working go back to the "Objects" tab.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/5.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/5.jpg)
 
 This is where you can upload files, so create a new folder, for example called test.
 
 Click on your folder and upload a couple of images.
 
-Click “upload”, click “add files”, add your files, scroll down to the access control list and check the “everyone (public access) read check box. A new check box will appear to confirm that you understand the implications of making your files public access, just check it, then scroll down to the bottom of the page and click “upload”. Once uploaded, you can check that the files will be accessible by BIIGLE by clicking on the object URL, if it has been uploaded correctly with public settings enabled, the image or video will open. If the file does not open, check the settings.
+Click "upload", click "add files", add your files, scroll down to the access control list and check the "everyone (public access) read check box. A new check box will appear to confirm that you understand the implications of making your files public access, just check it, then scroll down to the bottom of the page and click "upload". Once uploaded, you can check that the files will be accessible by BIIGLE by clicking on the object URL, if it has been uploaded correctly with public settings enabled, the image or video will open. If the file does not open, check the settings.
 
 Now return to your folder and click on a newly uploaded image. In the overview tab you will see the object URL, you will need to copy this but only the bit up to and including your folder name. This is what BIIGLE will need to link up to.
 
 Now log into BIIGLE and go to your dashboard.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/6.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/6.jpg)
 
 Click on create project
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/7.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/7.jpg)
 
 Click on create volume
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/8.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/8.jpg)
 
 Here you can name your volume, for example it might be a cruise name, a project name or other useful name.
 
@@ -132,11 +134,11 @@ list.files() -> imgs
     
 ```
 
-###	Enabling others to access your S3 AWS bucket when working in a team
+### Enabling others to access your S3 AWS bucket when working in a team
 
 To set permissions for users of your S3 AWS you will need to use IAM. Click on services in the top left of the AWS management console and type IAM in the all services search facility.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/9.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/9.jpg)
 
 Click on groups on the left menu
 
@@ -144,9 +146,9 @@ Create new group
 
 Name the group something sensible.
 
-Now you need to state what permissions the group gets. So on the attached policy screen type “S3” in the policy type search. Then click on AmazonS3FullAccess.
+Now you need to state what permissions the group gets. So on the attached policy screen type "S3" in the policy type search. Then click on AmazonS3FullAccess.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/10.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/10.jpg)
 
 Then click next, then create group.
 
@@ -154,39 +156,41 @@ Now you need to add users to your group, so click on users on the left hand menu
 
 Click on add user
 
-Add user name and click both “access type” check boxes.
+Add user name and click both "access type" check boxes.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/11.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/11.jpg)
 
 Select password options, then click next permissions
 
 Check the group you want the user to belong to
 
-Click “next: tags”
+Click "next: tags"
 
-Click “next: review”
+Click "next: review"
 
-Click “create user”
+Click "create user"
 
 Now it is very important to download the CSV file that gives you the key info for this user, you cannot get this info again if you change screen before downloading so do it now!
 
 Ok you are all set!
 
-##	Formatting your data for use in BIIGLE
+## Formatting your data for use in BIIGLE
 
 BIIGLE only accepts still images as either PNG or JPEG format.
 
-Video files: need to be converted to MP4 format (codec 254). This conversion can be done using the free software VLC (https://www.videolan.org/).
+Video files: need to be converted to MP4 format (codec 254). This conversion can be done using the free software VLC (<https://www.videolan.org/>).
 
 ## Converting video file to upload to BIIGLE
 
 *Take the following steps:*
 
-Media - convert/save - + add (find the file) – convert/save – profile (choose H.264 + MP3 (MP4) option from dropdown menu).
+Media - convert/save - + add (find the file) -- convert/save -- profile (choose H.264 + MP3 (MP4) option from dropdown menu).
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/12.jpg)
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/13.jpg)
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/14.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/12.jpg)
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/13.jpg)
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/14.jpg)
 
 Choose where to save it and give it a sensible filename, see below
 
@@ -196,32 +200,19 @@ FAQs/Troubleshooting:
 * VLC typically take the length of the video to convert.
 * You can set up batch conversion.
 
-##	Recommendations for the file structure of your bucket and file-naming conventions	
+## Recommendations for the file structure of your bucket and file-naming conventions
 
-It is worth giving some careful thought as to how you set up your file structure under your bucket. Different people use different systems and have different ways of storing data but there are some common features such as CAMPAIN_NAME and DEPLOYMENT_NAME. We set ours up as follows, but you need to work out what works for you. 
+It is worth giving some careful thought as to how you set up your file structure under your bucket. Different people use different systems and have different ways of storing data but there are some common features such as CAMPAIN_NAME and DEPLOYMENT_NAME. We set ours up as follows, but you need to work out what works for you.
 
-* CLOUD_STORAGE_REPOSITORY_FOR_PLATFORM/
-+ CAMPAIGN_NAME/ (for example research cruise number)
-+   DEPLOYMENT_NAME/ (for example ROV dive number)
-+       VIDEO_NAME/ (Video segment of ROV dive)
-+           ROV_20100625T130726_8888.jpg
-+           ROV_20100625T130727_7234.jpg
-+           ...
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/BucketStructureScreenshot_1.jpg)
 
 In practice for us that looks like this for one research cruise and considering image data:
 
-* Amazon S3 > Buckets > ‘bucket name’
-+ JC136/ 
-+   DIVE269/ 
-+       DIVE269_SCORPIO_1/ 
-+           1000__Isis-DIVE269_SCORPIO_1_20160517-181525.jpg
-+           10000__Isis-DIVE269_SCORPIO_1_20160517-182125.jpg
-+           100000__Isis-DIVE269_SCORPIO_1_20160517-192125.jpg
-+           ……
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/BucketStructureScreenshot_2.jpg)
 
-At this point it is also worth mentioning that it is good to follow a standard convention in how you name your images as it will make your life easier in the long run (python and R code you write for onward data use will run on all your files!). A possible standard is as follows, but again you must find what works for you and your data. Our ROV dive numbers are research cruise specific so we do not need to use research cruise in the image name, you might want to: 
+At this point it is also worth mentioning that it is good to follow a standard convention in how you name your images as it will make your life easier in the long run (python and R code you write for onward data use will run on all your files!). A possible standard is as follows, but again you must find what works for you and your data. Our ROV dive numbers are research cruise specific so we do not need to use research cruise in the image name, you might want to:
 
-*Example naming convention for image frames extracted from video ([CruiseNumber] is inserted as an example of where you might include it)*
+*Example naming convention for image frames extracted from video (\[CruiseNumber\] is inserted as an example of where you might include it)*
 
 VideoFrameNumber_[*CruiseNumber*]_PlatformName_DiveNumber_VideoSegment_YYYYMMDD_HHMMSS
 
@@ -233,36 +224,36 @@ There are no agreed standards on this issue and it would be useful if there were
 
 **IMPORTANT NOTES**: BIIGLE does not like spaces in file names, so use an underscore to separate out key parts of your file name. This also makes your file names machine readable. If you want your files to display in order when in BIIGLE you need to have numeric values at the start of the file name (e.g. frame number in the above image file example) or (in our video file example) start your video segment numbering with triple digits. i.e. 001 not single digit i.e. 1.
 
-#	Setting up projects and volumes in BIIGLE
+# Setting up projects and volumes in BIIGLE
 
-Once you have your files hosted, e.g. cloud storage set up, you can then go into BIIGLE to set up your projects and volumes. This process is relatively simple and you may already have done this when testing that your cloud storage works (see previous section). 
+Once you have your files hosted, e.g. cloud storage set up, you can then go into BIIGLE to set up your projects and volumes. This process is relatively simple and you may already have done this when testing that your cloud storage works (see previous section).
 
-First log into your BIIGLE account. 
+First log into your BIIGLE account.
 
 Go to your dashboard.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/15.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/15.jpg)
 
 Click on create project
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/16.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/16.jpg)
 
 Adding imagery to projects can be done in two ways:
 
-1. Create volume. This is done by attaching files from your remote server, e.g. from the Amazon server.
-2. Attach volumes. This is for volumes which are already in BIIGLE and you may need to attach the same volume to a different project. Start to type in the volume name, and it will display and you can click and it will add. Note, adding volumes this way attaches any annotations that have been made on the volume; if the original volume is deleted, the attached volume remains in the second project.
+1.  Create volume. This is done by attaching files from your remote server, e.g. from the Amazon server.
+2.  Attach volumes. This is for volumes which are already in BIIGLE and you may need to attach the same volume to a different project. Start to type in the volume name, and it will display and you can click and it will add. Note, adding volumes this way attaches any annotations that have been made on the volume; if the original volume is deleted, the attached volume remains in the second project.
 
 **Creating a volume**
 
 Click on create volume
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/17.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/17.jpg)
 
 Here you can name your volume, for example it might be a cruise name, a project name or other useful name. You need to then specify whether it is an image or video volume.
 
-In ‘volume URL’ you need to paste the URL for your Amazon S3 bucket and folder that relates to your volume. You will find this by doing the following: log into your AWS account (or equivalent remote server facility), go into your bucket and then file of interest, click on an image in your file of interest, in the overview tab you will see the object URL. Copy-paste 🙂
+In 'volume URL' you need to paste the URL for your Amazon S3 bucket and folder that relates to your volume. You will find this by doing the following: log into your AWS account (or equivalent remote server facility), go into your bucket and then file of interest, click on an image in your file of interest, in the overview tab you will see the object URL. Copy-paste 🙂
 
-In the ‘volume files’ you will need a list of the names of all the images (or videos) that are in the file. Below is an R script that can produce this list for image data. This script produces a list in the correct format and places it on your clipboard. You can then paste this into the ‘volume files’ box.  
+In the 'volume files' you will need a list of the names of all the images (or videos) that are in the file. Below is an R script that can produce this list for image data. This script produces a list in the correct format and places it on your clipboard. You can then paste this into the 'volume files' box.
 
 ```{r}
 
@@ -278,9 +269,9 @@ list.files() -> imgs
 
 ```
 
-Now hit ‘create’, and this will create your volume. Your images (videos) should appear in that volume after a few seconds. 
+Now hit 'create', and this will create your volume. Your images (videos) should appear in that volume after a few seconds.
 
-##	Recommendations for project / volume structuring in BIIGLE
+## Recommendations for project / volume structuring in BIIGLE
 
 It is worth considering how you set up the volumes. BIIGLE has evolved in recent years so that image and video volumes can now sit in the same project. This means that if you undertake Largo at the project level (see section 5) both image and video annotations will be displayed. Largo can also be undertaken at the volume level, but not on individual files (images or video) within a volume. When creating projects / volumes in BIIGLE, you can either:
 
@@ -299,43 +290,43 @@ There are pros and cons to both.
 
 * Better storage of all videos in one folder
 * **Cannot** Largo individual videos, can only be done at the volume level - so all videos within that folder
-* The filter volume function does not work to find videos, you would either have to scroll to find the video, or use the filter functions 
+* The filter volume function does not work to find videos, you would either have to scroll to find the video, or use the filter functions
 
-##	Make label trees
+## Make label trees
 
-Before you can begin labelling you need to create a label tree. We strongly advise you to use the SMarTaR-ID trees as this provides a standard ensuring that your annotations will be comparable with others annotations, e.g. your branching sponge morphospecies 5 is the same as someone else's. However, BIIGLE is very flexible and allows you to make your own trees if you prefer. 
+Before you can begin labelling you need to create a label tree. We strongly advise you to use the SMarTaR-ID trees as this provides a standard ensuring that your annotations will be comparable with others annotations, e.g. your branching sponge morphospecies 5 is the same as someone else's. However, BIIGLE is very flexible and allows you to make your own trees if you prefer.
 
-###	To use a publicly accessible (standard) tree
+### To use a publicly accessible (standard) tree
 
-To use these or other publicly accessible trees we suggest you first create a ‘fork’ of that tree (e.g. your own copy) so that you can edit it and add your own new taxa that you will come across. To do this go to the top right drop down menu on the BIIGLE dashboard and click on ‘label trees’. 
+To use these or other publicly accessible trees we suggest you first create a 'fork' of that tree (e.g. your own copy) so that you can edit it and add your own new taxa that you will come across. To do this go to the top right drop down menu on the BIIGLE dashboard and click on 'label trees'.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/18.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/18.jpg)
 
 This will take you to the label trees screen where you can see publicly available label trees.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/19.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/19.jpg)
 
-Search for a tree you want to use and click on it. Then in the settings drop down menu, choose ‘fork’. Give it your own name, choose to keep it private or make public, and create.
+Search for a tree you want to use and click on it. Then in the settings drop down menu, choose 'fork'. Give it your own name, choose to keep it private or make public, and create.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/20.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/20.jpg)
 
-###	Creating your own tree from scratch
+### Creating your own tree from scratch
 
-If you need to, you can create your own tree from scratch. From the dashboard, click on ‘create label tree’. Name your tree, decide on its visibility and create. You can then add labels to your tree using the ‘Label parent’ / Label name’ boxes on the left of the screen. However, if you are adding taxonomic names, we strongly advise you to use the ‘WoRMS label import’ tab, which will attach the WoRMS Aphia ID to the label such that you can retrieve taxonomic information from WoRMS on your BIIGLE outputs (World Register of Marine Species - https://www.marinespecies.org/index.php).
+If you need to, you can create your own tree from scratch. From the dashboard, click on 'create label tree'. Name your tree, decide on its visibility and create. You can then add labels to your tree using the 'Label parent' / Label name' boxes on the left of the screen. However, if you are adding taxonomic names, we strongly advise you to use the 'WoRMS label import' tab, which will attach the WoRMS Aphia ID to the label such that you can retrieve taxonomic information from WoRMS on your BIIGLE outputs (World Register of Marine Species - <https://www.marinespecies.org/index.php>).
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/21.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/21.jpg)
 
-##	Attaching a label tree to your project
+## Attaching a label tree to your project
 
-Once your tree exists you need to authorise projects to use it. To do this simply go back to the label tree screen, click on your new label tree and then click the projects tab. You then need to type your project name into the ‘add authorised project’ box, this will allow your project to use this tree. Next you need to add the tree to your project. To attach a tree to your project, simply go into your project, click on the ‘label trees’ tab, and then start typing the name of the label tree into the search box, it will offer you possible trees you can then click on to attach to your project.
+Once your tree exists you need to authorise projects to use it. To do this simply go back to the label tree screen, click on your new label tree and then click the projects tab. You then need to type your project name into the 'add authorised project' box, this will allow your project to use this tree. Next you need to add the tree to your project. To attach a tree to your project, simply go into your project, click on the 'label trees' tab, and then start typing the name of the label tree into the search box, it will offer you possible trees you can then click on to attach to your project.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/22.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/22.jpg)
 
 Now you are all set to start annotating 🙂
 
-If you need to edit your label tree mid annotating, for example if you come across something not in your label tree, then you can do this by going back to the label tree screen, click on your new label tree and add additional labels using the ‘add label’ or ‘WoRMS label import’ tabs. 
+If you need to edit your label tree mid annotating, for example if you come across something not in your label tree, then you can do this by going back to the label tree screen, click on your new label tree and add additional labels using the 'add label' or 'WoRMS label import' tabs.
 
-#	Make annotations
+# Make annotations
 
 Before we go any further it is useful to just familiarise yourselves with the different tools / tabs available at the project and volume level.
 
@@ -343,229 +334,228 @@ In the project window of BIIGLE, you can:
 
 * View image and video volumes uploaded to the project,
 * View/edit label trees attached to the project,
-* Add members who can view or edit annotations, 
+* Add members who can view or edit annotations,
 * Largo the annotation. The largo function allows you to view annotations of a specific label and re-assign if incorrect, or retrospective identification,
 * Export report for the entire project (see manual for details for each report type).
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/23.jpg)
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/24.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/23.jpg)
+
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/24.jpg)
 
 In the volume window of BIIGLE, you can:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/25.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/25.jpg)
 
-##	Image annotation
+## Image annotation
 
-To begin annotating you must select a project and volume to annotate. To view the projects, click on the three lines on the top-right corner of the webpage, and select “Projects” in the drop-down list, or just click on the projects tab. Projects will be listed on the page, and will consist of the name, preview, description, and date of last update. Double-click on the project of interest to open the volumes for each project. Alternatively, click on the “Volumes” button to open a window containing all the volumes available for access.
+To begin annotating you must select a project and volume to annotate. To view the projects, click on the three lines on the top-right corner of the webpage, and select "Projects" in the drop-down list, or just click on the projects tab. Projects will be listed on the page, and will consist of the name, preview, description, and date of last update. Double-click on the project of interest to open the volumes for each project. Alternatively, click on the "Volumes" button to open a window containing all the volumes available for access.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/26.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/26.jpg)
 
 Click on the volume of interest to open it and reveal all the images contained in it, then click on an image to start annotating. The image view in BIIGLE looks something like this:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/27.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/27.jpg)
 
-First select the appropriate tree from the “label tree” section of the panel on the right. To choose a label, you can either:
+First select the appropriate tree from the "label tree" section of the panel on the right. To choose a label, you can either:
 
 * Find the label in the label tree
 * Use the search function, you can search for any part of a label, including text or numbers
 * Use shortcut keys for your favourite list (max 9)
 
-To find the label in the label tree click on the coloured dot on the side of the label to show lower taxonomic or morphological levels. Select the label of interest and the name will appear in a box on the bottom-right corner of the screen. 
+To find the label in the label tree click on the coloured dot on the side of the label to show lower taxonomic or morphological levels. Select the label of interest and the name will appear in a box on the bottom-right corner of the screen.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/28.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/28.jpg)
 
-Now that the label is selected, click on the “draw a square” button on the bottom, and trace a square around the object of interest by clicking on its upper- and lower-middle points and extend the box as needed. The box will be of the same colour of the chosen label. The shape of the box can be modified by unselecting the “draw a square” button, clicking on a corner of the box (which will turn red) and dragging it to reshape it. After selecting the box, it is also possible to delete the annotation by clicking on the bin icon in the bottom panel. 
+Now that the label is selected, click on the "draw a square" button on the bottom, and trace a square around the object of interest by clicking on its upper- and lower-middle points and extend the box as needed. The box will be of the same colour of the chosen label. The shape of the box can be modified by unselecting the "draw a square" button, clicking on a corner of the box (which will turn red) and dragging it to reshape it. After selecting the box, it is also possible to delete the annotation by clicking on the bin icon in the bottom panel.
 
-Tips:
-* For more specific details on annotations, refer to annotation section on BIIGLE website (https://biigle.de/manual/tutorials/annotations/creating-annotations)
-* Use shortcut keys for annotation tools, this will speed up annotation sessions, these used in combination with the favourite keys (1-9) can significantly speed up annotation
+Tips: \* For more specific details on annotations, refer to annotation section on BIIGLE website (<https://biigle.de/manual/tutorials/annotations/creating-annotations>) \* Use shortcut keys for annotation tools, this will speed up annotation sessions, these used in combination with the favourite keys (1-9) can significantly speed up annotation
 
-![Annotation type keyboard shortcuts](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/29.jpg)
+![Annotation type keyboard shortcuts](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/29.jpg)
 
-When using annotations tools, things to consider: 
+When using annotations tools, things to consider:
 
-* If you want to use your annotation for training AI models try to use the rectangle tool only and draw your rectangles in the same orientation as the image as in the example above. Try to keep your rectangle tight around your animal (e.g. do not include lots of background in your annotation). If you need to use another shape (e.g. point) that’s OK but a second conversion step will be needed outside of BIIGLE to use it for onward AI model training.  
+* If you want to use your annotation for training AI models try to use the rectangle tool only and draw your rectangles in the same orientation as the image as in the example above. Try to keep your rectangle tight around your animal (e.g. do not include lots of background in your annotation). If you need to use another shape (e.g. point) that's OK but a second conversion step will be needed outside of BIIGLE to use it for onward AI model training.\
 * size of annotation tool, e.g. if using the point, try and annotate the same part of taxa each time as this will aid viewing in Largo mode.
 * If annotating for area use the polygon tool. You can either draw this manually with the mouse/stylus (with compatible computer/IPad) or using the magic wand tool.
 
 The annotation modes section has some useful options that may also help you.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/30.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/30.jpg)
 
-##	Video annotation
+## Video annotation
 
 To begin annotating you must select a project and volume to annotate, then select a video file (if you have organised your videos in multiple videos per volume). The video view in BIIGLE looks something like this:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/31.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/31.jpg)
 
 Annotation tools for video are mostly the same as that used for image annotation (see above), the exception is that you need to click the tick to accept the annotation before moving on to the next annotation. If this is not done, the annotation will not be complete.
 
 An additional annotation tool, whole frame annotations are also available. This allows you to in effect, segment the video. This could be to categorise by quality, habitat or even to record when an animal/object is in frame.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/32.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/32.jpg)
 
 The settings tab has some useful options that may also help you.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/33.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/33.jpg)
 
-##	Setting an annotation session
+## Setting an annotation session
 
-Annotation sessions can be set up for each volume allowing you to set a session where annotators cannot see each other’s annotations. These are ideal for training sessions and quality assurance to check for inter-analyst variation. 
+Annotation sessions can be set up for each volume allowing you to set a session where annotators cannot see each other's annotations. These are ideal for training sessions and quality assurance to check for inter-analyst variation.
 
 At the project level go to the Member tab and add all participants who will undertake the annotations.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/34.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/34.jpg)
 
-Then set up the annotation session. Go to volumes tab – and click on the volume thumbnail to take you to the volume view:
+Then set up the annotation session. Go to volumes tab -- and click on the volume thumbnail to take you to the volume view:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/35.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/35.jpg)
 
-Click on the edit button (pencil) – then edit annotation session
+Click on the edit button (pencil) -- then edit annotation session
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/36.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/36.jpg)
 
-Fill in the annotation session box, all must be filled in (example below). Add the users names (new users box) and when you click on them they will add to the right hand box ‘users’. When you have added everyone, press create.
+Fill in the annotation session box, all must be filled in (example below). Add the users names (new users box) and when you click on them they will add to the right hand box 'users'. When you have added everyone, press create.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/37.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/37.jpg)
 
 It will display like this:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/38.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/38.jpg)
 
-If you want to edit the session, i.e. remove the annotation session, click on it. Then you can delete it or just change the date to earlier than the date and that will mean it has expired and all users will be able to see each other’s annotations. Sadly deleting the annotation session does not delete the annotations, which is a bit annoying when using for training. 
+If you want to edit the session, i.e. remove the annotation session, click on it. Then you can delete it or just change the date to earlier than the date and that will mean it has expired and all users will be able to see each other's annotations. Sadly deleting the annotation session does not delete the annotations, which is a bit annoying when using for training.
 
-#	Quality control and the largo tool
+# Quality control and the largo tool
 
 The largo tool is just about the most useful tool you can imagine. It can be used to:
 
 * Check annotations for consistency
-* Separate coarsely classified groups in lower taxonomic / morphological groups 
+* Separate coarsely classified groups in lower taxonomic / morphological groups
 
-You can use the largo tool at the project or volume level. In essence it allows you to view all images with the same label at once and make changes to the labels. 
+You can use the largo tool at the project or volume level. In essence it allows you to view all images with the same label at once and make changes to the labels.
 
-At the project level simply click on the Largo tab: 
+At the project level simply click on the Largo tab:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/39.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/39.jpg)
 
 At the volume level the tab is here:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/40.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/40.jpg)
 
-In both cases you will then need to select a label from your tree. In the example here (at the project level) we have selected the ‘Echinoderms’ label, and you can see that anything that has been labelled ‘Echinoderms’ in the project is now shown on the screen. You can scroll through them using the scroll bar on the left. 
+In both cases you will then need to select a label from your tree. In the example here (at the project level) we have selected the 'Echinoderms' label, and you can see that anything that has been labelled 'Echinoderms' in the project is now shown on the screen. You can scroll through them using the scroll bar on the left.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/41.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/41.jpg)
 
 If you look carefully you can see that someone has labelled a cup coral as an echinoderm (image in the bottom right corner). This is clearly wrong and so this image needs to be corrected. To do this click on the image, this will make a cross appear on it. Then click continue, which will take you to the relabelling step.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/42.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/42.jpg)
 
-Now you need to select a new label for your animal. We will relabel this as a stony coral. First select the correct label from your label tree, then click on the image to assign the new label. Then you need to decide whether to delete the old label and replace it with the new label, or just give the animal two labels. Most of the time you will want to delete the old label and replace it with the new label. To do this you need to select the ‘force delete/re-label option on the top left of the screen.
+Now you need to select a new label for your animal. We will relabel this as a stony coral. First select the correct label from your label tree, then click on the image to assign the new label. Then you need to decide whether to delete the old label and replace it with the new label, or just give the animal two labels. Most of the time you will want to delete the old label and replace it with the new label. To do this you need to select the 'force delete/re-label option on the top left of the screen.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/43.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/43.jpg)
 
-You then need to hit the red save button to make the change. 
+You then need to hit the red save button to make the change.
 
-You can use largo for multiple changes at once. 
+You can use largo for multiple changes at once.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/44.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/44.jpg)
 
-You can also call labels on one label tree and relabel them to a different label tree.  
+You can also call labels on one label tree and relabel them to a different label tree.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/45.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/45.jpg)
 
 Sometimes you may want to review the animal in its original image to help you to decide if / what to re-label it as. To do this simply click on the top right hand corner of the thumbnail in the original largo screen, and this will open the original annotated image in a new window.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/46.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/46.jpg)
 
-##	Suggested best practice in annotation
+## Suggested best practice in annotation
 
-We have found through much experience that the way to get the most consistent annotations in the shortest time is to use a two-pass approach to annotation. Anyone familiar with sorting grab samples will understand where this comes from. We recommend you make a first pass through the image / video using high level taxonomy / morphology. We use the public SMarTaR-ID Basic Morphology Tree to first classify things to a high level standardised morphology. You may wish to make your own tree or just discipline yourself to only using high levels of your taxonomy tree. 
+We have found through much experience that the way to get the most consistent annotations in the shortest time is to use a two-pass approach to annotation. Anyone familiar with sorting grab samples will understand where this comes from. We recommend you make a first pass through the image / video using high level taxonomy / morphology. We use the public SMarTaR-ID Basic Morphology Tree to first classify things to a high level standardised morphology. You may wish to make your own tree or just discipline yourself to only using high levels of your taxonomy tree.
 
-Once we have annotated all our images / video to this level we use the Largo tool to then classify all images within each high level group to a lower level of taxonomy / morphology. Largo allows you to see all images classified under the same high level group at once. It is then a short and more consistent job to separate the images into lower level groups.  
+Once we have annotated all our images / video to this level we use the Largo tool to then classify all images within each high level group to a lower level of taxonomy / morphology. Largo allows you to see all images classified under the same high level group at once. It is then a short and more consistent job to separate the images into lower level groups.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/47.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/47.jpg)
 
-#	Downloading data and reformatting
+# Downloading data and reformatting
 
-As with any image analysis software, the results of the image analysis conducted on BIIGLE is stored there until it is retrieved by the user in order to analyse it further. 
+As with any image analysis software, the results of the image analysis conducted on BIIGLE is stored there until it is retrieved by the user in order to analyse it further.
 
-The data is exported via BIIGLE Reports for a single volume or the entire project. 
+The data is exported via BIIGLE Reports for a single volume or the entire project.
 
-To export a report, go find it in the aptly named ‘Reports’ tab at the root of a volume on the right handside: 
+To export a report, go find it in the aptly named 'Reports' tab at the root of a volume on the right handside:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/48.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/48.jpg)
 
-The same is possible for the entire project 
+The same is possible for the entire project
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/49.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/49.jpg)
 
 This takes you to a menu where you can choose the report type, and several other options to organise the data you are downloading.
 
-##	Get and use a report
+## Get and use a report
 
-BIIGLE has many report formats displaying different types of information. The list of reports and specificities of each types are listed here:
-https://biigle.de/manual/tutorials/reports/reports-schema#annotation-abundance-report 
+BIIGLE has many report formats displaying different types of information. The list of reports and specificities of each types are listed here: <https://biigle.de/manual/tutorials/reports/reports-schema#annotation-abundance-report>
 
-The reports can contain the image annotation, the image labels, the metadata (be it geographical or concerning the images’ characteristics). They can be nested by user, annotation tree or other. 
+The reports can contain the image annotation, the image labels, the metadata (be it geographical or concerning the images' characteristics). They can be nested by user, annotation tree or other.
 
-###	Image annotation report - CSV variant
+### Image annotation report - CSV variant
 
-For ecological analysis where you need to know the exact list of species present within each image in a volume or a project, the CSV format is the most practical. To get a CSV report, just select that option in the ‘Report variant’ drop down menu and leave the other boxes unticked.   
+For ecological analysis where you need to know the exact list of species present within each image in a volume or a project, the CSV format is the most practical. To get a CSV report, just select that option in the 'Report variant' drop down menu and leave the other boxes unticked.
 
-R code to combine reports and format their content into a specie x Image matrix can be found along with instructions here: https://github.com/DeepSeaCRU/CRU-resources.git 
+R code to combine reports and format their content into a species x image matrix can be found along with instructions here: <https://github.com/DeepSeaCRU/BIIGLE-resources.git> (in the SpeciesMatrices folder)
 
-The results of the SMarTaR-ID reports.Rmd are excel spreadsheets that can be used in R, python or any other software that takes tables as input. 
+The results of the SMarTaR-ID reports.Rmd are excel spreadsheets that can be used in R, python or any other software that takes tables as input.
 
 It also gives the possibility to re-arrange the labels hierarchy (the upper taxonomic levels) to make it easily available for later analysis.
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/50.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/50.jpg)
 
-#	Using the BIIGLE API
+# Using the BIIGLE API
 
-##	Intro to BIIGLE’s Application Programming Interface
+## Intro to BIIGLE's Application Programming Interface
 
-API stands for application programming interface, which is a set of definitions and protocols for building and integrating application software. It provides a standardised way for users to interact with databases and websites through command lines and lets them efficiently manipulate data. 
+API stands for application programming interface, which is a set of definitions and protocols for building and integrating application software. It provides a standardised way for users to interact with databases and websites through command lines and lets them efficiently manipulate data.
 
-The API works by sending requests to a server in the form of a command line rather than a point and click interface you normally use on a website. In practice it gives you a dialogue box in which you can input commands to interact with BIIGLE and script your action so it is faster, reproducible and can be automated. It is less intuitive because you have to write your request correctly in order to be correctly understood by the API and do what you intended. It is also faster as each command can perform a complex task that would require many clicks. This leaves less room for error than the manual interface where you may lose track of what you have and have not done, or click the wrong button without even realising it. This means that instructions can be written down and applied to the letter with no other input from you.  You can, for example, request the information attached to a specific object, modify them or add new ones. For the habitat mappers out there, this is akin to the console you open in ArcGIS to enter scripted instructions rather than use the drop-down menu and the GUI of each tool. In effect, you are pointing a command that corresponds to an action towards a specific object, the action gets performed and the expected output is sent back to you. 
+The API works by sending requests to a server in the form of a command line rather than a point and click interface you normally use on a website. In practice it gives you a dialogue box in which you can input commands to interact with BIIGLE and script your action so it is faster, reproducible and can be automated. It is less intuitive because you have to write your request correctly in order to be correctly understood by the API and do what you intended. It is also faster as each command can perform a complex task that would require many clicks. This leaves less room for error than the manual interface where you may lose track of what you have and have not done, or click the wrong button without even realising it. This means that instructions can be written down and applied to the letter with no other input from you. You can, for example, request the information attached to a specific object, modify them or add new ones. For the habitat mappers out there, this is akin to the console you open in ArcGIS to enter scripted instructions rather than use the drop-down menu and the GUI of each tool. In effect, you are pointing a command that corresponds to an action towards a specific object, the action gets performed and the expected output is sent back to you.
 
-An important note here is that to give the instructions to BIIGLE you need to identify the objects you want to modify. BIIGLE does not use the names of volumes and images that you are using. Probably because these can be quite long, have special characters and can be duplicated across users and projects. Usually, new objects (project, volume, image, label tree, label, annotations, etc) receive a numerical ID that is unique in the whole BIIGLE ecosystem. You need to know these IDs before you can form the right API requests that BIIGLE understands. All the available commands in the BIIGLE API are listed here: https://biigle.de/doc/api/index.html
+An important note here is that to give the instructions to BIIGLE you need to identify the objects you want to modify. BIIGLE does not use the names of volumes and images that you are using. Probably because these can be quite long, have special characters and can be duplicated across users and projects. Usually, new objects (project, volume, image, label tree, label, annotations, etc) receive a numerical ID that is unique in the whole BIIGLE ecosystem. You need to know these IDs before you can form the right API requests that BIIGLE understands. All the available commands in the BIIGLE API are listed here: <https://biigle.de/doc/api/index.html>
 
-Note that ‘listed’ does not mean ‘explained’. There is barely a description of what each command does, what input is expected and, succinctly, what the output will be; and no explanation of individual arguments needed in the body of each function. Some changes are regularly implemented in the commands, so it is worth taking a look there regularly in case your commands become obsolete.
+Note that 'listed' does not mean 'explained'. There is barely a description of what each command does, what input is expected and, succinctly, what the output will be; and no explanation of individual arguments needed in the body of each function. Some changes are regularly implemented in the commands, so it is worth taking a look there regularly in case your commands become obsolete.
 
-##	Basic requests
+## Basic requests
 
-To make a request, the task and targets must be combined to form the command. The API requests structure works a bit like a windows explorer pathway or a website address with hierarchical elements pasted together from left to right to form a sort of sentence.  
+To make a request, the task and targets must be combined to form the command. The API requests structure works a bit like a windows explorer pathway or a website address with hierarchical elements pasted together from left to right to form a sort of sentence.
 
-Here are simple examples: 
+Here are simple examples:
 
-###	Requesting a BIIGLE report
+### Requesting a BIIGLE report
 
-When requesting BIIGLE reports you receive an email with a link to click, that is in effect an API request to download the report created. 
+When requesting BIIGLE reports you receive an email with a link to click, that is in effect an API request to download the report created.
 
-Specifically, if it requests the report of number 1533, the request code will be: https://biigle.de/api/v1/reports/1533
+Specifically, if it requests the report of number 1533, the request code will be: <https://biigle.de/api/v1/reports/1533>
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/51.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/51.jpg)
 
-The easiest way to use that command is to paste it into your web browser’s (Chrome, Firefox, Opera, etc) address bar and it will send the request to the BIIGLE server, which will in turn do as instructed, in this case, prompt the download of report number 1533. There is more going on behind the scenes, for example, this will only work if you have been granted access to the report you are requesting (granted to you by the creator of the project). So, in your web browser, you need to be logged onto BIIGLE for the download to start, and your account needs to have been granted access to this volume. 
+The easiest way to use that command is to paste it into your web browser's (Chrome, Firefox, Opera, etc) address bar and it will send the request to the BIIGLE server, which will in turn do as instructed, in this case, prompt the download of report number 1533. There is more going on behind the scenes, for example, this will only work if you have been granted access to the report you are requesting (granted to you by the creator of the project). So, in your web browser, you need to be logged onto BIIGLE for the download to start, and your account needs to have been granted access to this volume.
 
-###	Requesting the ID numbers of BIIGLE objects
+### Requesting the ID numbers of BIIGLE objects
 
-Another example is for requesting some open label tree (gets a page displaying the tree in JSON format): https://biigle.de/api/v1/label-trees/55
+Another example is for requesting some open label tree (gets a page displaying the tree in JSON format): <https://biigle.de/api/v1/label-trees/55>
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/52.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/52.jpg)
 
 So you can explore all the BIIGLE objects that way and get all the pretty stuff displayed in green and pink numbers so you can make sense of it, maybe. So if you pick one project that has a specific ID: 1129
 
-First you might want to know what volumes there are in there: https://biigle.de/api/v1/projects/1129/volumes
+First you might want to know what volumes there are in there: <https://biigle.de/api/v1/projects/1129/volumes>
 
-If you want to display the BIIGLE ID of the images you see in a specific volume: https://biigle.de/api/v1/volumes/6063/files
-Every image added to BIIGLE gets unique Image ID. Not the ones on your remote storage server [not the ones that you have linked to a volume on BIIGLE].
+If you want to display the BIIGLE ID of the images you see in a specific volume: <https://biigle.de/api/v1/volumes/6063/files> 
 
-To get some info on a specific image: https://biigle.de/api/v1/images/1973978
+Every image added to BIIGLE gets unique Image ID. Not the ones on your remote storage server (not the ones that you have linked to a volume on BIIGLE).
 
-and what annotations it has: https://biigle.de/api/v1/images/1973978/annotations
+To get some info on a specific image: <https://biigle.de/api/v1/images/1973978>
 
-The results are displayed by the browser and give you the information you need to interact with the browser. 
+and what annotations it has: <https://biigle.de/api/v1/images/1973978/annotations>
+
+The results are displayed by the browser and give you the information you need to interact with the browser.
 
 **What you can do with the API**:
 
@@ -575,35 +565,35 @@ The results are displayed by the browser and give you the information you need t
 * You duplicate your volume. Take all or part of the annotation from one volume and add them to another without having to re-annotate the images
 * You can also selectively transfer part of your annotations or part of your images to another volume
 * This means you can back-up your volumes at a given time and bring it back to BIIGLE at a specific stage if you want to
-* You can also easily gather data about your project. How many images, how many volume, the size of each volume, the amount of annotation by each user… etc
+* You can also easily gather data about your project. How many images, how many volume, the size of each volume, the amount of annotation by each user... etc
 * You can also gather info about label trees and modify/update it
 
-These examples are just pulling information out of BIIGLE, not actually inputting anything on the server. Other types of request exist with a “body” of data that is uploaded when the request is sent. These are better done through a terminal through R or Python.  
+These examples are just pulling information out of BIIGLE, not actually inputting anything on the server. Other types of request exist with a "body" of data that is uploaded when the request is sent. These are better done through a terminal through R or Python.
 
-##	Using the API with R and Python
+## Using the API with R and Python
 
-You guessed it, if there are a lot of instructions to send, manually typing them one by one is not going to be feasible. Thanks to interfaces with your favourite coding languages, you can script your interaction with the API the same way you script other repetitive tasks. This comes down to manually “crafting” your command by gluing arguments together and then, sending them to the API directly through the console of your integrated development environment (IDE). This makes the interactions much more efficient as you program what commands are sent, which is considerably faster. This is relevant when many commands must be sent. Typically, when inputting data into individual volumes or images.
+You guessed it, if there are a lot of instructions to send, manually typing them one by one is not going to be feasible. Thanks to interfaces with your favourite coding languages, you can script your interaction with the API the same way you script other repetitive tasks. This comes down to manually "crafting" your command by gluing arguments together and then, sending them to the API directly through the console of your integrated development environment (IDE). This makes the interactions much more efficient as you program what commands are sent, which is considerably faster. This is relevant when many commands must be sent. Typically, when inputting data into individual volumes or images.
 
-To add an annotation to each image in volume, a single command must be sent for each image. A volume often hosts hundreds if not thousands of images. Hence the need to automate the process to speed it up and avoid errors. 
+To add an annotation to each image in volume, a single command must be sent for each image. A volume often hosts hundreds if not thousands of images. Hence the need to automate the process to speed it up and avoid errors.
 
 **So how do you use BIIGLE in R or Python?**
 
-R and Python are the most commonly used programming languages in the community of BIIGLE Users. They are not the only languages that allow users to interact with an API but other options will not be covered here. 
+R and Python are the most commonly used programming languages in the community of BIIGLE Users. They are not the only languages that allow users to interact with an API but other options will not be covered here.
 
-**What you need to get started**: 
+**What you need to get started**:
 
 * A viable installation of R and Python
 * An integrated development environment (IDE) is optional but recommended
 * Libraries that let you send requests to an API in R (httr) and python (requests): httr and requests in R and Python are examples
-* Your credentials 
+* Your credentials
 
-It is good practice to have a recent if not the latest version of R installed on your computer to ensure compatibility between all code and libraries. This is less straightforward with Python where recent and old versions can co-exist on parallel update paths but try to install version 3.7.10 or later. 
+It is good practice to have a recent if not the latest version of R installed on your computer to ensure compatibility between all code and libraries. This is less straightforward with Python where recent and old versions can co-exist on parallel update paths but try to install version 3.7.10 or later.
 
-An IDE is strongly recommended. Rstudio and Jupyter in Anaconda are good options for R and Python respectively, but if there is an environment you are familiar with, then that is really all you need. 
+An IDE is strongly recommended. Rstudio and Jupyter in Anaconda are good options for R and Python respectively, but if there is an environment you are familiar with, then that is really all you need.
 
-Base R and Python are not able to communicate with an API so you will need to import new packages or libraries to get the functions that can. In R, the code presented here uses “httr” (https://cran.r-project.org/web/packages/httr/index.html) and Python Code uses “requests” https://pypi.org/project/requests/. Make sure they are installed and up to date before starting. 
+Base R and Python are not able to communicate with an API so you will need to import new packages or libraries to get the functions that can. In R, the code presented here uses "httr" (<https://cran.r-project.org/web/packages/httr/index.html>) and Python Code uses "requests" <https://pypi.org/project/requests/>. Make sure they are installed and up to date before starting.
 
-You will need your credentials to tell BIIGLE who is sending these requests so it can check if you have access to the object you want to interact with. Your email address acts as your login. You will need your token that you can get here: https://biigle.de/settings/tokens. Once you have your token, store it in your IDE so it can be attached to your request each time your send one:
+You will need your credentials to tell BIIGLE who is sending these requests so it can check if you have access to the object you want to interact with. Your email address acts as your login. You will need your token that you can get here: <https://biigle.de/settings/tokens>. Once you have your token, store it in your IDE so it can be attached to your request each time your send one:
 
 Also, try some easy tasks first to make sure you understand the whole workflow correctly as you can easily make large scale errors when using the API.
 
@@ -626,7 +616,7 @@ print(request.text)
 
 ```
 
-The same example in R keeps the same structure but, of course the commands are different. 
+The same example in R keeps the same structure but, of course the commands are different.
 
 ```{r}
 
@@ -643,60 +633,60 @@ content(request, as = "text", encoding = "UTF-8")
 
 ```
 
-###	Accessing label tree information
+### Accessing label tree information
 
 BIIGLE takes its annotation label from a label tree that has to be manually created (see section 3.2 Make label trees).
 
 In this label tree, each label is given a specific ID generated by BIIGLE. So with this ID number, BIIGLE understands how to link an annotation to a given tree and label in the tree.
 
-The tree can be downloaded by following a link with the relevant number. This number will appear in your browser’s URL bar when you access the Label tree. 
+The tree can be downloaded by following a link with the relevant number. This number will appear in your browser's URL bar when you access the Label tree.
 
-*For example, to get tree number 1, follow: https://biigle.de/label-trees/1*
+*For example, to get tree number 1, follow: <https://biigle.de/label-trees/1>*
 
-Replace the number at the end of the URL to get another tree. This will provide a JSON table or csv spreadsheet. 
+Replace the number at the end of the URL to get another tree. This will provide a JSON table or csv spreadsheet.
 
 Note that you must have access to the tree to see its ID number and download it.
 
 Here is what it should look like:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/53.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/53.jpg)
 
 The ID here will be needed later to upload annotations with a given name to BIIGLE
 
-##	Uploading annotations to BIIGLE
+## Uploading annotations to BIIGLE
 
-A more significant sort of task you will perform with the API are those that create information. Most importantly of all, creating annotations. 
+A more significant sort of task you will perform with the API are those that create information. Most importantly of all, creating annotations.
 
-This task is usually the most time consuming and its automation can save a lot of time if the necessary information about what animals are present in an image and where they are within it already exists in a list of annotations stored in a table on your computer. 
+This task is usually the most time consuming and its automation can save a lot of time if the necessary information about what animals are present in an image and where they are within it already exists in a list of annotations stored in a table on your computer.
 
-This can be from one or more other BIIGLE volumes, from another annotation software, or may have been generated using Artificial Intelligence approaches. The API allows you to create BIIGLE annotations of corresponding parameters with the information stored in the table, which is much faster than the manual point and click input. 
+This can be from one or more other BIIGLE volumes, from another annotation software, or may have been generated using Artificial Intelligence approaches. The API allows you to create BIIGLE annotations of corresponding parameters with the information stored in the table, which is much faster than the manual point and click input.
 
 However, it will need to contain the following information required by the API
 
 **What you need to make annotations:**
 
 * **Volume ID**
-+ The Volume ID is specific to the volume you want to modify. You can use the API request shown above or navigate to the volume itself and see the ID in the address bar of your browser. 
+  + The Volume ID is specific to the volume you want to modify. You can use the API request shown above or navigate to the volume itself and see the ID in the address bar of your browser.
 * **Image ID**
-+ The Image ID is attributed to an image in a volume. You will need to get them from that volume and the same image in different volumes will have a different ID. To get the image ID, it is best to use the API 
+  + The Image ID is attributed to an image in a volume. You will need to get them from that volume and the same image in different volumes will have a different ID. To get the image ID, it is best to use the API
 * **Label ID**
-+ The Label ID is specific to the species name / OTU name / label name that you want to give to your annotation. This ID can be found in the label tree as indicated above (section 7.3.1). Every OTU / species / morphotype in your list of annotations must be matched to an ID in an existing label tree before it can be uploaded to BIIGLE. Note that the label tree must be linked to the volume you want to modify.
+  + The Label ID is specific to the species name / OTU name / label name that you want to give to your annotation. This ID can be found in the label tree as indicated above (section 7.3.1). Every OTU / species / morphotype in your list of annotations must be matched to an ID in an existing label tree before it can be uploaded to BIIGLE. Note that the label tree must be linked to the volume you want to modify.
 * **Annotation shape ID**
-+ The Shape ID: specifies what shape the annotation will be. BIIGLE can take annotations as point, circle, rectangle, polygons and other shapes. This needs to be fed into the API so it knows how to interpret the set of coordinates you are providing. This is a numerical ID where the shape of the annotation 1 is point, 4 is circle, 5 is rectangle. You can see all the shapes with this API request: https://biigle.de/api/v1/shapes 
+  + The Shape ID: specifies what shape the annotation will be. BIIGLE can take annotations as point, circle, rectangle, polygons and other shapes. This needs to be fed into the API so it knows how to interpret the set of coordinates you are providing. This is a numerical ID where the shape of the annotation 1 is point, 4 is circle, 5 is rectangle. You can see all the shapes with this API request: <https://biigle.de/api/v1/shapes>
 * **Coordinates of the annotation**
-+ The Coordinates: As you have specified what you see and the shape the annotation will have, you need to say where in the image it is. The coordinates are the X and Y of the annotation in pixels within the image. The origin is the top left corner. It is a string of numbers specific to each shape: points take [X,Y], circles take [X,Y, Radius], rectangles take [X top-left, Y top-left, X bottom-left, Y bottom-left, X bottom-right, Y bottom-right, X top-right, Y top-right]. 
+  + The Coordinates: As you have specified what you see and the shape the annotation will have, you need to say where in the image it is. The coordinates are the X and Y of the annotation in pixels within the image. The origin is the top left corner. It is a string of numbers specific to each shape: points take [X,Y], circles take [X,Y, Radius], rectangles take [X top-left, Y top-left, X bottom-left, Y bottom-left, X bottom-right, Y bottom-right, X top-right, Y top-right]. 
 * **Confidence**
-+ The Confidence is a number between 0 and 1 (1 meaning maximum confidence). It can be arbitrarily set to a constant by the user for all annotations.
+  + The Confidence is a number between 0 and 1 (1 meaning maximum confidence). It can be arbitrarily set to a constant by the user for all annotations.
 
 In summary, the list of annotations must look like this:
 
-![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/images/54.jpg)
+![](D:/OneDrive/OneDrive - University of Plymouth/Statistics_&_softwares/BIIGLE-resources/Manual/images/54.jpg)
 
-This information can easily be retrieved from an existing BIIGLE ‘CSV’ report. Note that the original ‘image_id’ and ‘volume_id’ in the report need to be replaced by the new image and volume ID corresponding to the new destination volume. 
+This information can easily be retrieved from an existing BIIGLE 'CSV' report. Note that the original 'image_id' and 'volume_id' in the report need to be replaced by the new image and volume ID corresponding to the new destination volume.
 
-If your annotations are stored in a different format (from another software or other custom archiving scheme), the equivalent table must be recreated. 
+If your annotations are stored in a different format (from another software or other custom archiving scheme), the equivalent table must be recreated.
 
-This R code example shows the basic code needed to create a label 
+This R code example shows the basic code needed to create a label
 
 ```{r}
 
@@ -742,16 +732,16 @@ POST(url,
 
 ```
 
-R code and instructions to add annotations generated by a YoloV5 computer vision algorithm are available here: https://github.com/DeepSeaCRU/CRU-resources.git 
+R code and instructions to add annotations generated by a YoloV5 computer vision algorithm are available here: <https://github.com/DeepSeaCRU/BIIGLE-resources.git> (in the YOLO folder)
 
-The YoloV5 to Biigle.Rmd is a follow up to the use of Yolov5 CNN to make predictions on images. You may want those predictions in BIIGLE along with your other annotations where it can be shared and manually curated. This R script will reshape the annotations produced by Yolo, particularly with regards to the names and IDs it needs to link the annotations to a label tree. It will then upload them to BIIGLE in a specific volume. 
+The YoloV5 to Biigle.Rmd is a follow up to the use of Yolov5 CNN to make predictions on images. You may want those predictions in BIIGLE along with your other annotations where it can be shared and manually curated. This R script will reshape the annotations produced by Yolo, particularly with regards to the names and IDs it needs to link the annotations to a label tree. It will then upload them to BIIGLE in a specific volume.
 
-Download the repository on your computer and use the API - Biigle to Biigle.rmd script to add annotations from a BIIGLE CSV report into a volume of your choice. 
+Download the repository on your computer and use the API - Biigle to Biigle.rmd script to add annotations from a BIIGLE CSV report into a volume of your choice.
 
-#	Exporting BIIGLE files for use in YOLO
+# Exporting BIIGLE files for use in YOLO
 
-All machine learning frameworks require input data in a format different from what BIIGLE provides. We provide code to transform the BIIGLE output into a set of files needed to train a YOLOV5 CNN: https://github.com/DeepSeaCRU/DSCRU_AI.git 
+All machine learning frameworks require input data in a format different from what BIIGLE provides. We provide code to transform the BIIGLE output into a set of files needed to train a YOLOV5 CNN: <https://github.com/DeepSeaCRU/BIIGLE-resources.git> (in the YOLO folder)
 
-#	Future updates to this manual
+# Future updates to this manual
 
 We have taken the decision to publish this manual as is but there are many aspects we would like to add in the near future, for example extracting images from video for use in BIIGLE and use of IFDOs. If you would like to help make this manual better you can either go to the living version on GitHub and raise an issue there that we can correct / add to in the next version, or contact us to contribute a section to the next version.
