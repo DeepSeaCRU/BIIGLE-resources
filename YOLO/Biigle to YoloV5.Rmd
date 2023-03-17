@@ -72,36 +72,46 @@ Read the text carefully and remember to check what the resulting files
 look like often as mistakes are easy to miss and hard to track down It
 is better the
 
-Make sure you have ran the **envsetup.R** script from the Github
-repository as it will setup your environment and ensure your Rstudio
-session has all the packages needed.
+The next code chunk will make sure your environment is properly setup your environment and ensure your Rstudio session has all the packages needed.
 
 The most common cause for errors are wrong pathways so make sure that
 all
 
 ## Setting up you environment
 
-First, load your packages, set the WD and set the pathways to the
+First, install and load your packages, set the WD and set the pathways to the
 different folders
 
+Then, create the folders to store input and output files
+
+Remember to pick a project name too
+
 ```{r include=FALSE}
+
+# list packages that will be needed
+pacakges <- c("jsonlite","httr","zip", "imager", "magick", "tidyverse", "magrittr","reticulate")
+
+# install those packages that you dont have yet
+install.packages( 
+  setdiff(pacakges,installed.packages()[,1] )
+)
+
+if("reticualte" %in% setdiff(pacakges,installed.packages()[,1] )){
+  print("never used reticulate? you may have to install python or link your existing python interpreter to Rstudio ")
+  print("Install python or Anaconda or zip the files manually")
+  
+}  
+
+
 library(jsonlite)
 library(magick)
+library(imager)
 library(tidyverse)
 library(magrittr)
 library(reticulate)
 
-
-#"C:/OneDrive - University of Plymouth" -> base
-#paste0( base,"/","DSCRU_AI") -> wd
-
-#"~/temp" -> base
-#paste0( base,"/","DSCRU_AI-main") -> wd
-#paste0( base,"/","DSCRU_AI") -> wd
-
 # folder where the script is 
 wd <- dirname(rstudioapi::getSourceEditorContext()$path)
-
 
 # make a variable with the full pathway to your WD
 setwd(wd)
@@ -110,20 +120,17 @@ print(wd)
 
 # folders:
 # this folder will contains the files that you will have to upload to Colab
-paste0(wd,"/yolov8files") -> for_yolo_files
+paste0(wd,"/yolov5files") -> for_yolo_files
+dir.create(for_yolo_files) # make the dir if you haven't 
 # this is the folder where your Biigle report have to go
 paste0(wd, "/reports") -> reports_folder
-
-
-# enter path to the folder where you images are
-images_dir <- "C:/path/to/images/dir"
-# alternatively, if you dont have the images near you, you can download them later
-paste0(wd,"/imageDL") -> imageDLdir
-dir.create(imageDLdir)
-
-
-# Set the name of your colab project
-projectName <- "ProjName"
+dir.create(reports_folder) # # make the dir if you haven't 
+# this folder will be used later once you have made predictiosn with your CNN
+paste0(wd, "/YoloResults") -> yolo_results
+ dir.create(yolo_results) # # make the dir if you haven't 
+# this folder will be used later when uploading annotations back to Biigle
+paste0(wd, "/taxonomy") -> taxonomy_dir
+dir.create(taxonomy_dir) # # make the dir if you haven't 
 
 
 ```
@@ -172,7 +179,6 @@ Dframes %>% bind_rows() -> All_annotations
 # show a list of labels
 All_annotations %>% count(label_name) %>% arrange(desc(n)) %>%  print()
 
-
 ```
 
 Now your Annotations are imported, select those you want to convert to
@@ -203,7 +209,7 @@ All_annotations %>% count(label_name) %>%
 # view you final table
 print(ALL_OBJ_NAME)
 
- 
+
 ```
 
 The table above shows the available classes, given names
@@ -213,6 +219,10 @@ images will be retained for training. But, here you can apply filter to
 choose which labels you want to keep. This code block lets you set those
 options in one place so the rest of the code needs no input.
 
+# !! Your Input is needed HERE !!
+
+-   Pick a project name
+-   filterimages: whether or not all the images you have annotations for should go into your Yolo training set. if not, add a specific filter in the appropriate code box further down. 
 -   filterlabels: Choose the labels you wanto to teach yolo to detect
     and discard the other
 -   ChangeYoloLabels: By default, Yolo will use the same lable names as
@@ -255,27 +265,31 @@ Just take that string and manually edit it to filter the labels
 **pro tip: if you want to merge two Biigle labels into one, give them
 the same yolo_name labels**
 
-# !! Your Input is needed HERE !!
+# Set the options in this chunk:
 
 ```{r}
 
+# Set the name of your colab project
+projectName <- "ProjName"
+
+
+# Do you want to filter your images? - - - - - - - - - - - - - - - - - - - 
+filterimages <- "no" # "yes" / "anything else"
+# if you enabled if, input the filter in the next chunk
+
 
 # Do you want to filter your annotations? - - - - - - - - - - - - - - - - - - - 
-filterlabels <- "yes" # "yes" / "anything else"
+filterlabels <- "no" # "yes" / "anything else"
 # if so, make a variable with the OTUs you want to keeo
-#labelsToKeep <- c("biigle_label1","biigle_label1","biigle_label1")
 # example:
-    labelsToKeep <- c('OTU261' , 'OTU339' , 'OTU23' , 'OTU2' , 'OTU20' )
+#labelsToKeep <- c("biigle_label1","biigle_label1","biigle_label1")
 
 
 # do you want to change some of the labels to better names  - - - - - - - - - - 
-ChangeYoloLabels <- "yes" # "yes" / "anything else"
+ChangeYoloLabels <- "no" # "yes" / "anything else"
 new_yolo_labels <- c()
 # example:
 # new_yolo_labels <- c("yolo_label1","yolo_label2","yolo_label3")
-# example:
- new_yolo_labels <- c("Xenos","Squat","Halc.","Cerianth.","Salp" )
- 
 
  
 # how many images total are you taking? - - - - - - - - - - - - - - - - - - - - 
@@ -288,9 +302,10 @@ downloadimages <- "no" # "yes" / "anything else"
 # provide the URL to where the images are stored
     # either: 
     serverURL <- "https://[servername].com/[bucketname]/ProjName"
+
     # example: "https://serverserverserver.s3.eu-west-2.amaaws.com/cruisephotos"
     # note that this will not work if your images are on Biigle's server (url will not be valid for DL)
-    # or:
+    # or, set path to local images:
     local_images_dir <- "C:/path/to/images/dir"
     # example:
     #      "C:/path/to/images/dir"
@@ -305,82 +320,105 @@ downloadimages <- "no" # "yes" / "anything else"
 If you have enabled the label filters, your table will be reduced to the
 annotations with these labels
 
+the final table of labels will come up as a prompt for you to review and change manually if you want to. The script will not move on until you close it
+
 ```{r}
 
 All_annotations -> d_annotations
 
-# filter labels if you have enabled it
- if(filterlabels == "yes"){
-   print("filtering labels")
-   # if further filtering is necessary: 
-# extract the right annotations
- d_annotations <- d_annotations %>%   # remove the # to activate and 
-  # filter with OTU/lable name
-  filter(label_name %in%  labelsToKeep )# %>% 
-  # exclude a volume (using its code)
-  # filter( volume != 2164) %>% 
-  # take the images of a specific annotator (OR remove them)
-    #filter( ! firstname == "Name", ! lastname == "Surname" )  
- 
- # also filter the OBJ_NAME table
- ALL_OBJ_NAME %>% select(  -class_code) %>% 
-   filter(label_name %in%  labelsToKeep ) %>% 
-  mutate( class_code = 0:(nrow(.) -1 ))  -> OBJ_NAME
-  
-   # update the number of labels
- d_annotations %>% count(label_name) %>% left_join(OBJ_NAME %>% select(-n) ) -> OBJ_NAME 
- 
-  }
+# make a list of labels
+ALL_OBJ_NAME %>% select(-class_code) %>%
+  mutate(class_code = 0:(nrow(.) - 1))  -> OBJ_NAME
 
-# changes the Yolo names to something sensible -- 
- if(ChangeYoloLabels == "yes"){
-   print("changing yolo labels")
-# If the catalogue names are no good labels put a new names column -- !! make sure they are in the right order
-          if(length(new_yolo_labels) == 0){OBJ_NAME %<>% mutate(Yolo_labelNames = paste0( "Class" ,class_code) ) 
-          # if you supplied new names, take these
-            }else if(length(new_yolo_labels) == nrow(OBJ_NAME)){
-              OBJ_NAME %<>% mutate(Yolo_labelNames = new_yolo_labels )  %>% filter()
-            }else{print("cannot replace labels")}
-   # this is equivalent to this line if you have 3 classes
-       
- }
+# filtering images if you enabled it - - - - - - - - - - - - - - - - - - - - - -
+if (filterlabels == "yes") {
+  d_annotations <- d_annotations %>% group_by(filename) %>%
+    # filter out all the images that have a Blurry label
+    filter(!all(c("Blurry") %in% label_name))
+}
+
+
+# filter labels if you have enabled it - - - - - - - - - - - - - - - - - - - - - -
+if (filterlabels == "yes") {
+  print("filtering labels")
+  # if further filtering is necessary:
+  # extract the right annotations
+  d_annotations  %>%
+    # filter with OTU/label name
+    filter(label_name %in%  labelsToKeep) %>%
+    # exclude a volume (using its code)
+    # filter( volume != 2164) %>%
+    # take the images of a specific annotator (OR remove them)
+    filter(lastname == "Meyer")  %>%
+    ungroup() -> d_annotations
+  
+  # also filter the OBJ_NAME table
+  ALL_OBJ_NAME %>% select(-class_code) %>%
+    filter(label_name %in%  labelsToKeep) %>%
+    mutate(class_code = 0:(nrow(.) - 1))  -> OBJ_NAME
+  
+  # update the number of labels
+  OBJ_NAME %>% select(-n) %>% left_join(d_annotations %>%  count(label_name),
+                                        by = join_by(label_name)) -> OBJ_NAME
+  
+}
+
+# changes the Yolo names to something sensible - - - - - - - - - - - - - - - - - - - - - -
+if (ChangeYoloLabels == "yes") {
+  print("changing yolo labels")
+  # If the catalogue names are no good labels put a new names column -- !! make sure they are in the right order
+  if (length(new_yolo_labels) == 0) {
+    OBJ_NAME %<>% mutate(Yolo_labelNames = paste0("Class" , class_code))
+    # if you supplied new names, take these
+  } else if (length(new_yolo_labels) == nrow(OBJ_NAME)) {
+    OBJ_NAME %<>% mutate(Yolo_labelNames = new_yolo_labels)  %>% filter()
+  } else{
+    print("cannot replace labels")
+  }
+  # this is equivalent to this line if you have 3 classes
+  
+}
 
 # now add these new names to the annotation
-d_annotations %<>% left_join(OBJ_NAME,by = "label_name") 
+d_annotations %<>% left_join(OBJ_NAME, by = "label_name")
 
 
 # shuffle the images in the table to randomize the order in which they are taken
 d_annotations %>% distinct(filename) %>% pull() -> imgs
 
 # if you have set an image resampling number below what you have available, it will randomly take your desired number of images
-if(resample_images < length(imgs)){
-  print(paste0("resampling images to keep ", resample_images ) )
-d_annotations %>% filter(filename %in% (imgs %>%  sample(resample_images) ) ) -> d_annotations
-
-# and reset the class counts
-OBJ_NAME %<>% select(-n)
- OBJ_NAME <- d_annotations  %>% 
-  count(label_name) %>%
-  left_join(OBJ_NAME, by = "label_name") %>%
-   arrange(class_code)
-   
-
-}else{
-   print(paste0("taking all ", resample_images," images " ) )
+if (resample_images < length(imgs)) {
+  print(paste0("resampling images to keep ", resample_images))
+  d_annotations %>% filter(filename %in% (imgs %>%  sample(resample_images))) -> d_annotations
+  
+  # and reset the class counts
+  OBJ_NAME %<>% select(-n)
+  OBJ_NAME <- d_annotations  %>%
+    count(label_name) %>%
+    left_join(OBJ_NAME, by = "label_name") %>%
+    arrange(class_code)
+  
+  
+} else{
+  print(paste0("taking all ", resample_images, " images "))
 }
- 
 
-# you can manually edit it 
+
+# you can manually edit it
 OBJ_NAME %<>% edit() # this will open a window. Type your changes and close
-
 
 
 # make a list of the names of your labels in Yolo
 d_annotations %>%
   distinct(Yolo_labelNames) %>%  pull(Yolo_labelNames) %>%  as.character() -> OBJ_OTU
-print(paste0("Model will be trained on: ", OBJ_OTU %>% paste(collapse = " , ")) )
+print(paste0("Model will be trained on: ", OBJ_OTU %>% paste(collapse = " , ")))
 
-print(paste0(nrow(d_annotations), " Annotations in ",nrow(d_annotations %>% distinct(filename))," images"))
+print(paste0(
+  nrow(d_annotations),
+  " Annotations in ",
+  nrow(d_annotations %>% distinct(filename)),
+  " images"
+))
 
 
 ```
@@ -397,9 +435,14 @@ dataset
 
 ```{r}
 d_annotations %>%  
-  ggplot(aes(label_name)) +
+  ggplot(aes(Yolo_labelNames, fill = Yolo_labelNames)) +
   geom_bar() + 
-  theme_bw() 
+  theme_bw() +
+  scale_fill_brewer(palette="Dark2", name = "Label names:") + 
+  labs(y = "Number of unique annotations",
+       x = "Labels names in YOLO files",
+       title = "Number of annotations per label names",
+       caption = "This is how much examples of each species your YOLO model will be trained on")
 ```
 
 ## Convert annotations format
@@ -707,7 +750,7 @@ images_dir %>%  list.files(recursive = T,
                            full.names = F,
                            include.dirs = F) -> imgs_list
 imgs_list %>%  str_split(pattern = "/") %>%
-  map(~ extract2(.x, length(.x))) %>%
+  map( ~ extract2(.x, length(.x))) %>%
   unlist() -> imgs_names
 
 # format the table
@@ -717,24 +760,33 @@ tibble(image = imgs_list,
 
 # add the pathways to the images - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # merge it with the the images metadata including the path and dimensions
-  img_PATHWAYS %>%  left_join(yolo_annotations, . , by = "filename" ) -> yolo_annotations_path
+img_PATHWAYS %>%  left_join(yolo_annotations, . , by = "filename") -> yolo_annotations_path
 
 # make sure all images are matched to their pathways
-yolo_annotations_path %>% filter(is.na(path)) -> mismatched # 
+yolo_annotations_path %>% filter(is.na(path)) -> mismatched #
 
-if(nrow(mismatched) == 0){
+if (nrow(mismatched) == 0) {
   print("All images have been found - proceed")
-}else{
-  paste0(nrow(mismatched %>% distinct(filename)), " images have not been matched")
-
+} else{
+  paste0(
+    nrow(mismatched %>% distinct(filename)),
+    " images have not been matched (out of ",
+    nrow(yolo_annotations %>% distinct(filename)),
+    ")"
+  )
+  paste0("mismatched images are: ",
+         mismatched %>%  distinct(filename) %>% pull)
+  
 }
+
 # if you want to know what the mismatches are, call the mismatched table in the console
+
 
 ```
 
 if it says 0, then you are clear to proceed. If not, try to see why some
 images were not found in the directory. Often there might be a
-discrepancy inthe names, the date can be written wrong or the the format
+discrepancy in the names, the date can be written wrong or the the format
 is different (jpg on Biigle but png on you machine)
 
 ## For safety, you may want to to look at what your resized annotations look like:
@@ -743,7 +795,7 @@ is different (jpg on Biigle but png on you machine)
 images, taking a smaller subset may not be necessary
 
 ```{r}
- library(imager)
+
 
 # randomly take a couple of images to see how the annotations plot over these
 imgforplot <- yolo_annotations_path %>%
@@ -820,14 +872,19 @@ for (I in seq(imgs)) {
 Now you will separate the annotations between a training and validation
 folders.
 
-note that with Yolov5, you need a validation set that is used throughout
+note that with Yolo, you need a validation set that is used throughout
 training to calculate mAP at regular intervals. This may be refereed to
 as train and val
 
 This step will vary depending on how you choose to resample you data.
 You may not want to take all your images
 
+Both training and testing sets will be saved as tables that can be re-open later
+
+the list of labels will also be saved as a txt file as it is sometime necessary for other annotation and ML applications
+
 ```{r  message=FALSE}
+
 # shuffle the images in the table to randomize the order in which they are taken
 yolo_annotations_path %>% distinct(filename) %>% pull() -> v
 
@@ -860,75 +917,102 @@ print(paste0(d_testing_Val %>%  count(filename)  %>% nrow() * 2, " single files 
 d_testing_Val %>%  write_csv(paste0(for_yolo_files, "/test_set.csv"))
 
 # export the labels
-OBJ_NAME %>% write_csv(paste0(for_yolo_files, "/",projectName,"_labels.csv"))
+# export the labels
+OBJ_NAME %>% arrange(class_code) %>% write_csv(paste0(for_yolo_files, "/",projectName,"_labels_info.csv"))
+OBJ_NAME %>% arrange(class_code) %>%  select( Yolo_labelNames) %>% write_delim(col_names = FALSE, paste0(for_yolo_files, "/",projectName,"_labels.txt"))
 
 ```
 
+**You can manually update the csv files in Excel, they will be re-open in the next code chunk**
+
 ## Make the files for Yolo local and on Colab
 
-the annotations have to be written into a txt file for each image.
+# Note that this reads the csv tables exported earlier. You can modify those
+manually and, then, convert them to YOLO format 
+
+The annotations have to be written into a txt file for each image.
 images and annotations have to be together in a folder
 
-If you so desire you can rescale your images to save space on cloud
-storage. This is not recommended as it may impact the performances
+If you so desire you can rescale your images to save space on cloud (if you train on the cloud) storage. This is not recommended as it may impact the performances of your CNN 
 
 ```{r  message=FALSE}
  
-  
+
+
 # make yolo zip files for training and testing sets
 for (training_OR_testing in c("train", "test")) {
-  
-  if(training_OR_testing == "train"){
+  if (training_OR_testing == "train") {
     # teh trainin gset
-    read_csv( paste0(for_yolo_files,"/train_set.csv") ) ->  annotations
-    labelsfolder  <-  paste0(for_yolo_files,"/",projectName, "/labels/train" )
-    imagefolder <- paste0(for_yolo_files,"/",projectName, "/images/train")
+    read_csv(paste0(for_yolo_files, "/train_set.csv")) ->  annotations
+    labelsfolder  <-
+      paste0(for_yolo_files, "/", projectName, "/labels/train")
+    imagefolder <-
+      paste0(for_yolo_files, "/", projectName, "/images/train")
     print("Making the training set")
-  }else if(training_OR_testing == "test"){
-    read_csv(  paste0(for_yolo_files,"/test_set.csv") ) -> annotations
-    labelsfolder  <-  paste0(for_yolo_files,"/",projectName, "/labels/val" )
-    imagefolder <- paste0(for_yolo_files,"/",projectName, "/images/val")
+  } else if (training_OR_testing == "test") {
+    read_csv(paste0(for_yolo_files, "/test_set.csv")) -> annotations
+    labelsfolder  <-
+      paste0(for_yolo_files, "/", projectName, "/labels/val")
+    imagefolder <-
+      paste0(for_yolo_files, "/", projectName, "/images/val")
     print("Making the testing set")
   }
   
   # create a fodler
   
-  dir.create(labelsfolder,recursive = T)
+  dir.create(labelsfolder, recursive = T)
   dir.create(imagefolder, recursive = T)
   
   
-  # for each image in the annotations table 
+  # for each image in the annotations table
   annotations %>% count(filename) %>%  pull(filename) ->  imgs
-  for(i in seq(imgs)){
-    
-    
+  for (i in seq(imgs)) {
     imgs[i] -> imgs.i
     # get the image name no matter the extention
-    imgs.i %>%  str_split(pattern = fixed(".") ) %>% unlist()  %>%   magrittr::extract(1)  -> imagename.i
+    imgs.i %>%  str_split(pattern = fixed(".")) %>% unlist()  %>%   magrittr::extract(1)  -> imagename.i
     
-    # set path the image 
+    # set path the image
     # or from the existing repository
-    imagepath.i <- annotations %>%  filter(filename == imgs.i) %>%  distinct( path    ) %>% pull()
+    # remove what is after the "." (will break if not )
+    # imgs.i %>%  str_split(pattern = fixed(".") ) %>% unlist()  %>% magrittr::extract(1)  -> imagename.i
+    # remove the last 4 characters
+    imgs.i %>%  str_sub(end = -5)  -> imagename.i
+    
+    # set path the image
+    # or from the existing repository
+    imagepath.i <-
+      annotations %>%  filter(filename == imgs.i) %>%  distinct(path) %>% pull()
+    
     
     # some time stamps can be matched multiple times if they are records for several species
-    # pick the first one 
-    if(length(imagepath.i) > 1 ){ imagepath.i[1] -> imagepath.i}
+    # pick the first one
+    if (length(imagepath.i) > 1) {
+      imagepath.i[1] -> imagepath.i
+    }
     
     annotations %>%  filter(filename == imgs.i) %>%
-       distinct(center.x, center.y,  width, height, .keep_all = T) %>% 
+      distinct(center.x, center.y,  width, height, .keep_all = T) %>%
       select(all_of(c("class_code", yolopointnames))) -> labels_txt
     # round the coordinates to only 2 digits
     labels_txt %<>%
-      mutate(across(c(center.x, center.y, width, height), round, digits = 2  ) )
+      mutate(across(c(center.x, center.y, width, height), ~  round(.x, digits = 2)))
     
     # Export the txt file
-    write.table(labels_txt, quote = FALSE, row.names = FALSE, 
-                col.names = F, file = paste0(labelsfolder,"/",imagename.i,".txt") )  
+    write.table(
+      labels_txt,
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = F,
+      file = paste0(labelsfolder, "/", imagename.i, ".txt")
+    )
     
     # and move the image
-    file.copy(from = imagepath.i,
-                     to = paste0(imagefolder,"/",imagename.i,".jpg"), overwrite = T)
- 
+    file.copy(
+      from = imagepath.i,
+      to = paste0(imagefolder, "/", imagename.i, ".jpg"),
+      overwrite = T
+    )
+    
     
     rm(labels_txt, imagepath.i, imagename.i)
     
@@ -993,7 +1077,7 @@ locally
 
 # Zip for faster upload to colab
 
-zip the folders you just made (makes life easier)
+zip the folders you just made 
 
 This is not a necessity but makes life easier especially for larger
 datasets that you are going to work with on a regular basis
@@ -1001,8 +1085,9 @@ datasets that you are going to work with on a regular basis
 use python to zip the files (the R zipping is buggy when used in
 markdown... annoyingly)
 
-**Reminder: this will no work if you have not configured python to work
-in Rstudio**
+**Reminder: this will not work if you have not configured python to work
+in Rstudio** 
+Or it will prompt you to install it
 
 ```{python}
 import os
@@ -1013,7 +1098,7 @@ wdp =  r.getwd() # this only works of your RMD is in your WD
 wdp =  r.wd
 wdp = wdp.replace('/','\\')
 # for the training set
-path = os.path.join(wdp,"yolov8files" )
+path = os.path.join(wdp,"yolov5files" )
 dir_name =  os.path.join(path,r.projectName )
 # make a zip
 shutil.make_archive(os.path.join(path,r.projectName ) , 'zip',dir_name)
