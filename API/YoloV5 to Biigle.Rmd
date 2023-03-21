@@ -1,0 +1,537 @@
+---
+title: "Yolo To Biigle"
+author: "Nils"
+date: "02/12/2021"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## Before you start
+
+This step takes place after you ran predictions with a yolov5 weight
+files and you produced the 'labels' folder with predictions in .txt
+files with
+
+this means you must use these flags when calling yolov5/detect.py :
+--save-txt --save-conf
+
+\- It is better to have access to the .yaml file of the weights you use
+to make your predictions but not essential
+
+\- you can manually write the corresponding labels in the script if
+easier but beware, this is harder to manage if you have a lot of labels
+
+\- You must have URLs for your images and know how to upload them onto
+biigle
+
+\- You need the label tree raw file so you can link your verbose names
+to the label IDs biigle uses.
+
+\- This tree must be linked to the project you will modify
+
+\- Obvious but you need internet connection to interact with the online
+Biigle session
+
+## Setting up you environment
+
+First, load your packages, set the WD and set the pathways to the
+different folders
+
+you can run this code to create the structure in the folder. once it is
+done, place your labels/annotations into the labels folder and add the
+taxonomy catalogue with the Biigle IDs into the taxonomy folder
+
+```{r include=FALSE}
+library(jsonlite)
+library(httr)
+library(imager)
+library(magick)
+library(tidyverse)
+library(magrittr)
+
+
+# set a pathway to your WD - just so you know where it is
+# the rest of the pathway can be nested here, up to you
+wd <- "C:/Your/path/yoloannotations"
+
+# make the directory where your rmd file is as your wd
+  # wd  <- dirname(rstudioapi::getSourceEditorContext()$path) 
+
+# set pathway to your predictions directory 
+predictions_dir <- "C:/Repos/yolov5/runs/detect/exp"
+
+# Optional :: pathway to folder where your images are 
+images_dir <- "Z:/images/Test_images/imageset"
+
+# set the path to where your label catalogues are
+taxonomy_dir  <- "C:/your/path/taxonomy trees"
+
+# pathway to your original data directory Where the .yaml file is
+data_dir <- "C:/your/path/AUVmulti_targets"
+
+# set the images width and height of the images - right click on image to find out their resolution 
+# !! dont get this wrong !!
+    images.width <- 2448
+    images.height <- 2048
+# you can also use the API or Go on Biigle and point your mouse on the bottom right corner of the image to get their exact resolution
+# Overall, it is the simplest way to do this and making sure you have the correct resolution
+
+```
+
+## set your table of Biigle names
+
+Yolo and Biilge will use different names for each OTU. You need to
+translate from one to the other There are many way to get that step. the
+easiest one is to write the names
+
+If you don't have access to the yaml file or can't be bothered to paste
+the pathways here (fair...), just put down the class names as a vector
+here:
+
+```{r}
+
+# path to the hyper parameter yaml of your Yolo model that you made predictions with
+diryaml <- paste0(data_dir,"/dataset.yaml")
+ 
+
+# print the names 
+diryaml %>% read.delim()%>% unlist() %>% as.vector() %>% str_subset(pattern = "names:") -> v
+print(v)
+  v %>% str_remove(pattern =  ".*\\['|\\]" ) %>% str_remove(pattern = "\\'].*|\\]") -> v
+    v %>%  str_split(pattern = "','") %>%  unlist() -> objnames
+print(objnames)
+
+
+
+# manually enter the object names list
+# read it from the yaml file, it should be a line that start with "names : ['names1','names2']
+# and paste it there 
+# objnames <- c('Acanella','OTU2','Craniella','Munida','OTU404','OTU555','OTU582','OTU963')
+
+OBJ_NAME <- 
+  tibble( yolo_name = objnames  , 
+  class_id = c(1:length(objnames)) -1 )
+
+# example of label names from change names to DSCU labels
+OBJ_NAME   %<>%
+  mutate(
+    # replace this vector with your names
+    label_name = c(
+      'OTU585',
+      'OTU2',
+      'OTU992',
+      'OTU339',
+      'OTU404',
+      'OTU555',
+      'OTU582',
+      'OTU963'
+    )
+  )
+
+
+# change names to smartr ID labels 
+# these names must be in the same order as the corresponding yolonames
+OBJ_NAME   %<>% 
+   # replace this vector with your names
+  mutate(label_name = c('SM670 Acanella arbuscula',
+                        'SM362 Ceriantharia msp1',
+                        'SM1099 Craniella longipilis',
+                        'SM266 Munida msp1',
+                        'SM240 Eumalacostraca msp2',
+                        'SM397 Phormosoma placenta',
+                        'SM38 Actiniaria msp20',
+                        'SM783 Bathyplotes natans') )
+
+
+# you can always check and modify manually with: 
+# OBJ_NAME %>% edit()
+
+
+
+# view final names
+OBJ_NAME %>% pull(label_name) %>%  print()
+
+
+```
+
+## load the YoloV5 annotations
+
+V5 makes predictions as txt files. You need to aggregate them all into
+one
+
+```{r message=FALSE}
+
+paste0( predictions_dir,"/labels" ) -> annotations_dir
+
+# list the annotations files
+annotations_dir %>% 
+  list.files(pattern = ".txt")   -> txtfiles
+# list the images - if you have them in a folder
+images_dir %>% 
+  list.files(pattern = ".jpg") -> imgs
+# list the images - as the ones for which you have annotations (omiting empty images)
+txtfiles %>%  str_replace(pattern = ".txt",replacement = ".jpg") -> imgs
+
+
+
+Dl <- list()
+length(txtfiles) -> l
+
+for(i in seq(txtfiles) ){
+  
+  # open the label txt file
+  txtfiles[i] -> label.i
+  print(label.i)
+  paste0(annotations_dir,"/", label.i) %>% read_table(col_names = F) -> d.i
+  
+  # change column names and add image
+  d.i %<>% set_names(c("class_id", "center.x" , "center.y" , "width", "height","confidence")) %>%
+    mutate(filename = label.i %>%  str_replace(pattern = "txt","jpg")) %>% 
+    relocate(filename, .before = class_id)
+  
+  d.i -> Dl[[i]]
+  
+    paste0( round(i/l,digits = 2)*100," % done" ) %>%  print()
+  
+}
+
+ 
+Dl %>%  bind_rows() -> annotations
+
+# add a label name
+annotations %<>% left_join( OBJ_NAME, by = "class_id") %>% relocate(label_name, .before = "class_id")
+
+
+```
+
+the yolo annotations are not compatible with Biigle so they have to be
+converted back to Biigle's antive format where coordinates are in pixel
+numbers
+
+```{r}
+
+
+annotations %<>%  
+  # add the image dimensions 
+  #!!!! make it a step in the upload to biigle script so you can read the image attribute there !!!!
+  mutate(attrs.width = images.width, attrs.height = images.height ) %>% 
+  # change names of relative coord. to make rooms for calculate pixel coodinates
+    rename(
+   relative_coordinates.center_x = center.x , 
+   relative_coordinates.center_y = center.y,
+   relative_coordinates.width = width,
+   relative_coordinates.height = height
+    )
+
+# denormalise the coordinates
+    annotations %<>% 
+      # resize the center X dimension
+      mutate(center.x = relative_coordinates.center_x *  attrs.width ) %>%
+      # resize the center Y
+      mutate(center.y = relative_coordinates.center_y *  attrs.height ) %>% 
+      # resize the X width 
+      mutate(width = relative_coordinates.width *  attrs.width ) %>% 
+      # resize teh y dimension 
+      mutate(height = relative_coordinates.height  * attrs.height ) 
+    
+# add more dimensions columns for easie coordinate calculations for other shapes
+    annotations %<>% 
+    mutate(xleft = center.x - (width/2), 
+           ybottom = center.y - (height/2),
+           xright = center.x + (width/2),
+           ytop= center.y + (height/2)
+    )  
+
+
+```
+
+## make a table to link the label names in yolo with the keys in the species catalogue
+
+Biigle has a centralised mangment system for all the labels of all the
+catalogues where each label has a unique id number. this lets you input
+any verbose names and ensure it will not be confused with the label of
+the same name in another tree. So you must retrieve that id before you
+add it into biigle
+
+```{r}
+
+# load the species catalog
+
+# add the taxonomy to the lables (so annotations can be grouped into higher levels bins)
+paste0(taxonomy_dir,"/smartarid - Label_tree.csv") %>% read_csv() %>% 
+  select(- label_tree_id) -> tree
+
+tree %<>% arrange(id) %>%  rename(label_name = name, label_id = id, aphia_id = source_id)
+
+# attach the tree labels to the label names table
+OBJ_NAME %<>% left_join(tree, by = "label_name")
+
+
+# you can always check and modify manually with: 
+# OBJ_NAME %>% edit()
+
+
+```
+
+## run some checks to make sure all labels have an equivalent in catalgue
+
+```{r}
+  # make sure the names are in the tree
+OBJ_NAME %>% mutate( mismatches =  OBJ_NAME$label_name %in% tree$label_name ) %>% 
+  filter(mismatches == FALSE) -> d
+
+if(nrow(d) == 0){
+  print(paste0("All yolo labels are matched in the catalogue"))
+}else{
+  print(paste0(nrow(d)," yolo labels are not in the catalogue"))
+}
+
+
+# delete the matching table
+rm(d)
+
+# assuming all went well, add the label ids to the actual annotations 
+annotations %>%
+  left_join(OBJ_NAME ,
+            by = c("label_name", "class_id", "yolo_name")) -> annotations_ids
+
+
+
+```
+
+## convert the yolo annotations to biigle format
+
+first, what biigle volume will be working on?
+
+do you have the images? this should download them in your WD
+
+```{r echo=TRUE}
+serverURL <- "https://server.com/bucket name"
+paste0(wd,"/imageDL") -> imageDLdir
+dir.create(imageDLdir)
+
+for (imageName in imgs) {
+  print(imageName)
+  # dont download the image if it is already there
+  if(!file.exists(paste0(imageDLdir,"/",imageName))){
+    print(" -- Downloading -- ")
+  paste0(serverURL, "/",imageName ) %>% download.file(destfile = paste0(imageDLdir,"/",imageName), mode = 'wb')
+  }else{print("already downloaded")}# checking image doesnt exist before downloading 
+  
+}# download images to your yolo directory
+
+```
+
+If you dont have one yet, make a biigle volume with the images for which
+you have annotations Assuming, images with the same names (and the same
+animals, idealy) are uplaoded on a server somewhere, create a new volume
+and link those specific images to it - Give it a name in "2. Choose a
+name or import from file" box - Pop the serverURL into the "3. Choose a
+file source" box - Add the images list in the "Volume files" box
+
+```{r echo=TRUE}
+# print the names of the images that will be uploaded
+print(imgs)
+
+# get the images names
+writeClipboard(
+    paste0(
+        unlist(paste(imgs,collapse = " , ")
+        ) ,
+        collapse = " , "))
+
+```
+
+once the volume is done, get its volume id so you can point the API
+towards the right images on biigle otherwise, pick an existing volume
+
+## biigle API parameters
+
+To interact with Biigle, you can either use the manual interface or the
+API. since you already know where your annotations are in the image and
+what labels they have you can use the API. You will need to know you
+Biigle credential before you are authorized to interact with your
+volumes. You also need a token for your identity to be tied to your
+requests and authorized. You can get your token at:
+<https://biigle.de/manual/tutorials/login-and-account-settings>
+
+```{r}
+
+# put your credentials here: 
+login <- "your email address"
+token <- "your token number"
+
+
+# base url
+base_url <- "https://biigle.de/api/v1"
+
+# the ID of the volume you will add your images to  
+Volume <- 8076 # ID code of the volume to modify
+
+
+# go check your volume
+shell.exec(paste0("https://biigle.de/volumes/",Volume))
+
+```
+
+Once you are sure where your images will go, we need to get some info
+from biigle about how it calls these images so we can give it the
+instructions it understands
+
+first, get the ids of the images in r. This is also a gentle intro to
+using the API When you send a request to the server it respond with a
+code that means success, fail or inbetween
+
+Some server responses Status: 201 \# Created -- that probably means
+success Status: 422 \# unprocessable entity -- I guess that is a fail
+
+all API commands are listed here:
+<https://biigle.de/doc/api/index.html#api-_>
+
+this step can take a while if there are a lot of images to get the info
+about
+
+```{r}
+
+# get the new images infos (ID etc)
+      # build the URL from the base API address, which volu
+      url <- paste0(base_url, 
+                    # which volume you want info from
+                    "/volumes/",Volume,
+                    # and what exacly you want to know about this volums
+                    "/files" )
+
+# it should look like this : "https://biigle.de/api/v1/volumes/123456789/files"
+
+      
+# Then, send the request to get a list of image IDs for that volume
+      # send the request with you credential attached
+      GET(url, authenticate(login, token) ) %>% 
+        content(., as = "text", encoding = "UTF-8") %>% 
+        jsonlite :: fromJSON( flatten = TRUE) -> imageIDs
+      
+tibble(filename = imgs, biigleid = imageIDs, volume_id = Volume) -> imageinfos
+
+      
+# Add that info to the annotation tables
+imageinfos %>% select(biigleid  , filename, volume_id )  %>%
+  left_join(annotations_ids ,by = "filename" , keep = FALSE ) %>% 
+  select(-contains("relative"), - class_id, yolo_name) -> annotations_biigle
+
+
+
+# You can get more info about the images. This is not necessary here but potentially useful to verrify hte prameters     
+# build URL
+  url.i <- paste0(base_url,"/images/", imageIDs[1] )
+  # send request
+  GET(url.i, authenticate(login, token) ) %>% 
+    content(., as = "text", encoding = "UTF-8") %>% 
+    # reformat 
+    jsonlite :: fromJSON( flatten = TRUE) %>%
+    unlist %>% t %>% as.data.frame() -> Image_infos
+  
+      
+ 
+```
+
+last but important, add some additional parameters that the API can
+interpret, the shape of the annotation is most important
+
+```{r}
+
+# add columns for shapes and confidence
+annotations_upload <- annotations_biigle %>% 
+  # remove the unnecessary columns
+  # add the arguments that the API will interpret to make the labels
+  # !! the shape names and and IDs are essential
+  mutate( shape_id = 5, # 4 is for Circle, # 5, Rectangle, #1, Point
+          shape_name = "Rectangle") # names is just there for clarity
+
+ 
+```
+
+## Uploading the annotations
+
+You should be all set to actually start uploading the images
+
+it is good practice to run the loop once (i = 1) to see if the label
+gets in the right place. Run the commands once, it should print what
+image and label it used. Go to this image on your volume, there should
+now be one annotation. If it looks right, delete it manually (or it will
+get duplicated) and run the loop.
+
+You may want to run the loop without actually send the requests to chek
+the URLs are correctly assembled. in which case, dont give it the green
+light.
+
+by design, you can only send 10,800 requests per hour. There are a
+couple of ways around this but they are not covered here.
+
+the rp list collects the server resonse to your request. If all goes
+well, it will say "201". other codes exists for when things dont work.
+This is not always helpful but can help narrowing down what the issue
+is.
+
+```{r}
+
+# upload -----------------------------------------------------------------------
+# are you sure want to upload? only give green light if you are certain the code is right 
+# errors could have unexpected consequences
+upload_enabled <- "Green" # "Green" or "notGreen
+
+# make sure there are not too many annotations 
+if( annotations_upload %>% nrow() > 10799){print("Too many annotations, this will not gor through")}
+ 
+# server responses to annotation input - - - - - - - - - - - - - -- - - - - -  -
+upload_response <- list()
+
+for (i in 1:nrow(annotations_upload)) {
+  
+  annotations_upload %>% slice(i) -> A.I
+  cat( paste( A.I$filename," (id:", A.I$biigleid, ") - - - " , A.I$label_name), "in" , A.I$shape_name)
+   
+# build the bounding box  - that is the coordinates of the rectangles
+  topleft = c(A.I$xleft, A.I$ybottom)  
+  bottomleft = c(A.I$xleft, A.I$ytop)
+  bottomright = c(A.I$xright, A.I$ytop) 
+  topright = c(A.I$xright, A.I$ybottom)
+  
+biigle_coordinates = c(topleft, bottomleft, bottomright, topright)
+  
+  paste0(base_url,"/images/", A.I$biigleid,"/annotations" ) -> url.i
+  # make the query list for each annotation
+  # these are the required parameters
+  list( shape_id = A.I$shape_id, # 4 is for circle
+        label_id = A.I$label_id,
+        # add confidence number - Either the one from yolo
+        confidence = A.I$confidence,
+        # or, an arbitrary number
+        # confidence = 0.75 ,
+        # make the list of points coordinates
+        points = biigle_coordinates ) -> body_list
+  
+  
+  # send the request (if enabled)
+  if(upload_enabled == "Green"){
+    cat("Sending request to server - - ")
+    # say that to the API
+    POST(url.i,
+         config = authenticate(login, token),
+         body = body_list, 
+         encode = "json"    ) -> rp
+    # example image
+    rp -> upload_response[[length(upload_response) +1]]
+  }# 
+  print("Next annotation") 
+  rm(url.i)
+  
+}      
+      
+
+
+```
