@@ -72,7 +72,7 @@ images_dir <- "Z:/images/Test_images/imageset"
 taxonomy_dir  <- "C:/your/path/taxonomy trees"
 
 # pathway to your original data directory Where the .yaml file is
-data_dir <- "C:/your/path/AUVmulti_targets"
+data_dir <- "C:/your/path/projName"
 
 # set the images width and height of the images - right click on image to find out their resolution 
 # !! dont get this wrong !!
@@ -111,7 +111,7 @@ print(objnames)
 # manually enter the object names list
 # read it from the yaml file, it should be a line that start with "names : ['names1','names2']
 # and paste it there 
-# objnames <- c('Acanella','OTU2','Craniella','Munida','OTU404','OTU555','OTU582','OTU963')
+# objnames <- c('names1','names2','names3','names4','names5','names6')
 
 OBJ_NAME <- 
   tibble( yolo_name = objnames  , 
@@ -371,7 +371,7 @@ token <- "your token number"
 base_url <- "https://biigle.de/api/v1"
 
 # the ID of the volume you will add your images to  
-Volume <- 8076 # ID code of the volume to modify
+Volume <- 9999 # ID code of the volume to modify
 
 
 # go check your volume
@@ -485,7 +485,7 @@ is.
 upload_enabled <- "Green" # "Green" or "notGreen
 
 # make sure there are not too many annotations 
-if( annotations_upload %>% nrow() > 10799){print("Too many annotations, this will not gor through")}
+if( annotations_upload %>% nrow() > 10799){print("Too many annotations, this will not go through")}
  
 # server responses to annotation input - - - - - - - - - - - - - -- - - - - -  -
 upload_response <- list()
