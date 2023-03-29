@@ -1,3 +1,5 @@
+<a href="https://doi.org/10.5281/zenodo.7728927"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7728927.svg" alt="DOI"></a>
+
 # BIIGLE-resources
 Various resources to interact with Biigle
 
