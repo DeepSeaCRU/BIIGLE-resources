@@ -822,7 +822,7 @@ for (I in seq(imgs)) {
   paste0(nrow(annotations.I)," annotations") %>% print()
   
   # open the images
-  annotations.I %>%  distinct(path) %>%  pull() %>% extract(1) %>% 
+  annotations.I %>%  distinct(path) %>%  pull() %>% magrittr::extract(1) %>% 
   load.image( ) -> image2
   
   
